@@ -46,14 +46,6 @@ flowchart LR
 5. **Checks.** Ten checks run on the finished HTML, fix what they safely can and report the rest (the [table below](#checks-on-every-email)).
 6. **Export.** Subject lines are split out, preview text set, and the email exported as one self-contained HTML file or a zip with its images.
 
-## What's in this repo
-
-| Part | What it is | Size |
-|---|---|---|
-| `local/` | **This app, written for this project:** the web UI, the run and graph workers, the company and product knowledge graphs, the brief writer and its checklist, the ten post-render checks, graph editing and Modify, the two design layers, email import, export, per-run model choice, the Claude Code and ChatGPT CLI adapters (including tool calls for the designer agent), and the bootstrap that runs the engine on one machine | 27 Python modules, ~9,900 lines; UI ~2,500 lines |
-| `tests/`, CI | Offline pytest suite for `local/` and a GitHub Actions workflow (ruff and pytest) | 105 tests, ~900 lines |
-| Third-party | Email section patterns adapted from Cerberus and Foundation for Emails, email-client support data from caniemail (all MIT, see `local/design/NOTICE.md`), the `mjml` npm package, and the Python libraries in `local/requirements.txt` | |
-
 ## Key design decisions
 
 **Facts come from the brand, not the model.** A model writing marketing copy will happily invent a price, a material or a guarantee. Here the product's facts, price and photos come from its knowledge graph, which records the page every fact came from. The planner is told not to add others, and after rendering the **Facts** check makes one model call that compares the copy with the fact sheet, the photos and the brief, rewriting any specific claim none of them supports. Graph changes requested in plain language (Modify) come with an exact quote from the page they came from; the quote is checked against the page text, and a change whose quote isn't found starts unticked with a warning.
@@ -83,25 +75,6 @@ flowchart LR
 - **Where data is stored.** Runs, graphs, uploads and settings stay in `local/storage/` (git-ignored). File access is confined to that folder: storage keys and run ids are validated, and paths that resolve outside it are refused.
 - **Local only.** The server listens on `127.0.0.1` and has no login, so don't expose it on a network. Claude Code and ChatGPT logins are for your own use; anything other people use needs API keys.
 - **CI** runs with read-only repository permissions and never needs a model key: the tests replace model, network, browser and MJML calls with fakes, and fail if anything tries to open a connection.
-
-## Tests and lint
-
-The tests need no model, network or browser, and run in about a second:
-
-```bash
-python3.12 -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/python -m pytest
-.venv/bin/ruff check .
-```
-
-## Known limits and next steps
-
-- **It places photos, it doesn't make them.** It uses the brand's photos and the ones you upload, and generates no product photography or animation.
-- **Facts depend on the site.** The fact check catches unsupported specifics, but only against what the brand's site and your brief say. Check the copy before sending.
-- **Tests don't run the model-driven pipeline.** They cover the app's own logic offline. Next step: a recorded end-to-end run with model responses replayed from fixtures.
-- **Rate limits.** Up to `MAX_PARALLEL_RUNS` (default 2) emails generate at once, and Claude Code and ChatGPT logins have rate limits, so raising it can make runs fail.
-- **A dependency deprecation.** `brand_graph._analyze` uses Pillow's `getdata()`, which Pillow 14 (October 2027) removes.
 
 ---
 
