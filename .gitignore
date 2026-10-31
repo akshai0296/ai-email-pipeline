@@ -1,0 +1,9 @@
+.venv/
+tools/node_modules/
+local/.env
+local/storage/
+__pycache__/
+*.pyc
+.DS_Store
+.pytest_cache/
+.ruff_cache/

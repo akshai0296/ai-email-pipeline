@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI email pipeline</title>
+<style>
+  :root {
+    --bg: #f6f5f2; --panel: #ffffff; --ink: #1b1d21; --muted: #6b6f78; --line: #e3e1dc;
+    --accent: #1f4fd1; --accent-ink: #ffffff; --warn: #a15c00; --err: #b3261e; --ok: #1e7a3e;
+    --code: #f0efeb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111317; --panel: #1a1d22; --ink: #e9eaec; --muted: #9aa0aa; --line: #2b2f36;
+      --accent: #7aa2ff; --accent-ink: #0d1020; --warn: #e0a54a; --err: #ff8a80; --ok: #6fd28f; --code: #15181c; }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  header { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; }
+  header span { color: var(--muted); }
+  main { display: grid; grid-template-columns: minmax(320px, 420px) 1fr; gap: 0; min-height: calc(100vh - 50px); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  form { padding: 16px 20px; border-right: 1px solid var(--line); overflow: auto; }
+  fieldset { border: 0; padding: 0; margin: 0 0 18px; }
+  legend { font-weight: 600; margin-bottom: 8px; }
+  label { display: block; color: var(--muted); font-size: 12px; margin: 10px 0 4px; }
+  input[type=text], textarea, select { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; }
+  textarea { resize: vertical; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row3 { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 10px; }
+  .meter { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12px; margin-top: 6px; color: var(--muted); }
+  .meter .ok { color: var(--ok); } .meter .miss { color: var(--warn); } .meter b { color: var(--ink); }
+  .seq { display: grid; gap: 10px; margin: 0 0 12px; }
+  .seq .card { border: 1px solid var(--line); border-radius: 8px; padding: 10px; background: var(--panel); }
+  .seq .card b { font-size: 13px; } .seq .card span { color: var(--muted); font-size: 12px; }
+  .seq textarea { margin-top: 6px; }
+  @media (max-width: 480px) { .row3 { grid-template-columns: 1fr; } }
+  .row2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
+  .progress { display: grid; gap: 6px; }
+  .bar { height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .6s; }
+  .steps { display: flex; gap: 6px 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .steps .done { color: var(--ok); } .steps .running { color: var(--ink); font-weight: 600; }
+  .jobs > div { padding: 8px 0; border-top: 1px solid var(--line); font-size: 13px; cursor: pointer; display: grid; gap: 4px; }
+  .jobs > div.focus b { color: var(--accent); }
+  .jobs .meta2 { color: var(--muted); font-size: 12px; }
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+  .compare iframe { height: 70vh; max-width: none; }
+  .compare h4 { margin: 0 0 6px; font-size: 13px; }
+  .swatch { display: flex; gap: 8px; align-items: center; }
+  .swatch input[type=color] { width: 36px; height: 32px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: none; }
+  .swatch input[type=text] { font-family: ui-monospace, Menlo, monospace; }
+  .drop { display: block; margin: 0; padding: 18px 12px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; color: var(--muted); font-size: 12px; cursor: pointer; transition: border-color .15s, background .15s; }
+  .drop b { display: block; color: var(--ink); font-size: 14px; margin-bottom: 2px; }
+  .drop:hover, .drop:focus-visible { border-color: var(--accent); outline: none; }
+  .drop.over { border-color: var(--accent); border-style: solid; background: var(--code); }
+  #dropMsg { font-size: 12px; color: var(--warn); margin-top: 6px; }
+  .imgsearch-toggle { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--accent); cursor: pointer; }
+  #imgSearch { margin-top: 8px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+  #imgSearch .imgbar { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; }
+  @media (max-width: 480px) { #imgSearch .imgbar { grid-template-columns: 1fr; } }
+  #imgSearch .imgbar button { width: auto; padding: 8px 14px; }
+  #imgResults { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 8px; max-height: 460px; overflow: auto; }
+  #imgResults .tile { position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; cursor: pointer; background: var(--code); }
+  #imgResults .tile:hover, #imgResults .tile:focus-visible { border-color: var(--accent); outline: none; }
+  #imgResults .tile img { display: block; width: 100%; height: 90px; object-fit: contain; background: #fff; }
+  #imgResults .tile span { display: block; padding: 4px 6px; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #imgResults .tile.busy { opacity: .5; } #imgResults .tile.added { outline: 2px solid var(--ok); }
+  .img-row { display: grid; grid-template-columns: 48px 1fr; gap: 8px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); }
+  .img-row img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; background: var(--code); }
+  .img-row .fields { display: grid; gap: 6px; }
+  button { padding: 10px 14px; border: 0; border-radius: 6px; background: var(--accent); color: var(--accent-ink); font: inherit; font-weight: 600; cursor: pointer; width: 100%; }
+  button:disabled { opacity: .5; cursor: default; }
+  .note { padding: 10px 12px; border-radius: 6px; background: var(--code); color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+  .note.err { color: var(--err); }
+  section.out { padding: 16px 20px; display: grid; grid-template-rows: auto auto 1fr auto; align-content: start; gap: 12px; min-width: 0; }
+  .progress:empty { display: none; }
+  #log:empty { display: none; }
+  .status { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .pill { padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); font-size: 12px; }
+  .pill.running { color: var(--warn); } .pill.done { color: var(--ok); } .pill.error { color: var(--err); }
+  .preview { display: grid; grid-template-columns: 640px 1fr; gap: 16px; min-height: 0; }
+  @media (max-width: 1300px) { .preview { grid-template-columns: 1fr; } }
+  iframe { width: 100%; max-width: 640px; height: 78vh; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+  .side { min-width: 0; display: grid; gap: 12px; align-content: start; }
+  .side a { color: var(--accent); }
+  .dl { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 4px; }
+  .dl a { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 13px; }
+  .dl a.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .subjects div, .runs div { padding: 6px 0; border-top: 1px solid var(--line); font-size: 13px; }
+  .subjects .ph { color: var(--muted); }
+  .runs a { cursor: pointer; }
+  .warn { color: var(--warn); font-size: 13px; }
+  .checks div { padding: 5px 0; border-top: 1px solid var(--line); font-size: 13px; display: grid; grid-template-columns: 74px 1fr; gap: 8px; }
+  .checks .st { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .checks .pass { color: var(--ok); } .checks .fixed { color: var(--accent); } .checks .warn { color: var(--warn); } .checks .skipped { color: var(--muted); }
+  .viewbar { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .viewbar button { width: auto; padding: 5px 10px; font-size: 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); font-weight: 600; }
+  .viewbar button.on { border-color: var(--accent); color: var(--accent); }
+  .viewbar span { color: var(--muted); font-size: 12px; align-self: center; }
+  .viewbar button.comment.on { background: var(--accent); color: var(--accent-ink); }
+  .edit .note { display: grid; grid-template-columns: 22px 1fr auto; gap: 6px; padding: 5px 0; border-top: 1px solid var(--line); font-size: 13px; align-items: start; }
+  .edit .num { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 11px; display: grid; place-items: center; font-weight: 700; }
+  .edit a, .versions a { color: var(--accent); cursor: pointer; font-size: 12px; }
+  .edit .add { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
+  .edit .add button, .edit .apply { width: auto; padding: 7px 12px; }
+  .versions div { padding: 5px 0; border-top: 1px solid var(--line); font-size: 13px; }
+  .versions .cur { color: var(--ok); font-size: 11px; font-weight: 700; }
+  .sections { font-size: 13px; }
+  .sections div { padding: 6px 0; border-top: 1px solid var(--line); }
+  .sections b { font-weight: 600; }
+  pre { margin: 0; background: var(--code); padding: 10px; border-radius: 6px; font: 11px/1.4 ui-monospace, Menlo, monospace; height: 220px; overflow: auto; white-space: pre-wrap; word-break: break-word; }
+  .empty { color: var(--muted); padding: 28px 24px; border: 1px dashed var(--line); border-radius: 8px; max-width: 640px; }
+  .empty b { color: var(--ink); }
+  .empty ol { margin: 10px 0; padding-left: 20px; }
+  .empty li { margin: 4px 0; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+  .brief-actions { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+  .brief-actions button { width: auto; padding: 7px 12px; }
+  .brief-actions a { color: var(--accent); cursor: pointer; font-size: 13px; }
+  button.ghost { background: var(--panel); color: var(--ink); border: 1px solid var(--line); font-weight: 600; }
+  button.ghost:hover:not(:disabled) { border-color: var(--accent); }
+  .search { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+  .search button { width: auto; padding: 8px 14px; }
+  .saved { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .saved a { font-size: 12px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 99px; cursor: pointer; color: var(--ink); text-decoration: none; }
+  .brand-card { margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .brand-card .logo { display: flex; align-items: center; justify-content: center; height: 84px; padding: 14px; }
+  .brand-card .logo img { max-height: 56px; max-width: 70%; }
+  .brand-card .meta { padding: 8px 12px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); }
+  .brand-card .meta b { color: var(--ink); font-size: 13px; }
+  .brand-card .meta a { color: var(--accent); cursor: pointer; }
+  .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px; background: #f3f2ef; }
+  .thumbs img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border-radius: 4px; }
+  .facts { margin: 4px 0 0; padding-left: 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI email pipeline</h1>
+  <span>Brief, brand and photos in → a finished, checked email out</span>
+</header>
+<main>
+  <form id="f" autocomplete="off">
+    <fieldset>
+      <legend>Model access</legend>
+      <select name="backend" id="backend"><option value="">Checking model access…</option></select>
+      <div id="backendNote" class="note" style="margin:8px 0 0">Checking which logins and keys are ready…</div>
+      <div class="row2" id="modelRow" hidden>
+        <div><label for="model">Model</label><select id="model"></select></div>
+        <div><label for="effort">Effort</label><select id="effort"></select></div>
+      </div>
+      <div id="modelNote" class="hint"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Company &amp; product</legend>
+      <div class="search">
+        <input type="text" id="brandQuery" placeholder="Brand name or website, e.g. allbirds.com">
+        <button type="button" id="brandFind">Find</button>
+      </div>
+      <div id="savedBrands" class="saved"></div>
+      <input type="hidden" name="brand_id" id="brandId">
+      <div id="brandCard" class="brand-card" hidden></div>
+      <div id="productBox" hidden>
+        <label>Product (optional)</label>
+        <div class="search">
+          <input type="text" id="productQuery" placeholder="Product name or page link, e.g. Tree Runner">
+          <button type="button" id="productFind">Find</button>
+        </div>
+        <div id="savedProducts" class="saved"></div>
+        <input type="hidden" name="product_id" id="productId">
+        <div id="productCard" class="brand-card" hidden></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Audience</legend>
+      <label for="audienceSel">Who receives this email</label>
+      <select id="audienceSel"></select>
+      <div id="audienceCustom" class="row" hidden>
+        <div><input type="text" id="audienceName" placeholder="Audience name, e.g. Runners"></div>
+        <div><input type="text" id="audienceDesc" placeholder="Who they are, what they care about"></div>
+      </div>
+      <div id="audienceHint" class="hint"></div>
+      <input type="hidden" name="audience" id="audience" value="Consumer">
+      <input type="hidden" name="audience_description" id="audienceDescription">
+    </fieldset>
+
+    <fieldset>
+      <legend>Brief</legend>
+      <label for="template">Start from a campaign template (optional)</label>
+      <select id="template" name="template"><option value="">No template</option></select>
+      <label for="brief">What the email is for and how it's laid out</label>
+      <textarea name="brief" id="brief" rows="7" required placeholder="Type an idea (“spring launch of the Tree Runner”) and press Write it for me, or write the whole brief yourself.">Launch email for our over-ear headphones in pale blue. Mood: a private moment with music. Open on a big two-line headline, then the hero product shot, one short paragraph, two detail images side by side with small numbered captions (01 / Cool blue, 02 / The details), a closing line and a single CTA "Take a closer look".</textarea>
+      <div class="brief-actions">
+        <button type="button" class="ghost" id="briefWrite">Write it for me</button>
+        <button type="button" class="ghost" id="briefImprove">Improve my brief</button>
+        <a id="briefUndo" hidden>Undo</a>
+      </div>
+      <div id="briefNote" class="hint">Uses the company, product and audience you picked. The result stays editable.</div>
+      <div id="briefMeter" class="meter"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Brand style</legend>
+      <div class="row">
+        <div><label>Name</label><input type="text" name="brand_name" value="Headphones" required></div>
+        <div><label>Tagline / campaign</label><input type="text" name="tagline" value="The Listening Edit"></div>
+      </div>
+      <div class="row">
+        <div><label>Background</label><div class="swatch"><input type="color" data-for="background" value="#0b1118"><input type="text" name="background" value="#0B1118"></div></div>
+        <div><label>Text</label><div class="swatch"><input type="color" data-for="text_color" value="#ffffff"><input type="text" name="text_color" value="#FFFFFF"></div></div>
+      </div>
+      <div class="row">
+        <div><label>Accent / CTA</label><div class="swatch"><input type="color" data-for="accent" value="#c9dcf2"><input type="text" name="accent" value="#C9DCF2"></div></div>
+        <div><label>CTA label</label><div class="swatch"><input type="color" data-for="accent_text" value="#0b1118"><input type="text" name="accent_text" value="#0B1118"></div></div>
+      </div>
+      <label>Font</label>
+      <input type="text" name="font" value="Helvetica Neue">
+      <label>Voice</label>
+      <input type="text" name="voice" value="Quiet, confident, sensory. Short sentences.">
+      <label>Rules (one per line)</label>
+      <textarea name="rules" rows="3">Headlines are two short lines, sentence case, ending in full stops.
+Generous dark space; no gradients, no icons, no emojis.
+Square-cornered CTA with uppercase, letter-spaced label.</textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend>Images</legend>
+      <label class="drop" id="drop" tabindex="0">
+        <input type="file" id="files" accept="image/png,image/jpeg,image/webp" multiple hidden>
+        <b>Drop images here</b>or click to choose · PNG, JPG or WebP · you can also paste one
+      </label>
+      <div id="dropMsg" hidden></div>
+      <a class="imgsearch-toggle" id="imgSearchBtn" role="button" tabindex="0">Search for images…</a>
+      <div id="imgSearch" hidden>
+        <div class="imgbar">
+          <input type="text" id="imgQuery" placeholder="What should it show? e.g. pixel phone in someone's hand">
+          <select id="imgSource" aria-label="Where to search"></select>
+          <button type="button" id="imgGo">Search</button>
+        </div>
+        <div class="hint" id="imgNote">Click an image to add it below. The brand's website also includes the photos saved in its product graphs.</div>
+        <div id="imgResults"></div>
+      </div>
+      <div id="imgs"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Generate</legend>
+      <div class="row3">
+        <div><label for="speed">Speed</label>
+          <select name="speed" id="speed">
+            <option value="best">Best quality (~6 min)</option>
+            <option value="balanced">Balanced: faster model for simple steps</option>
+            <option value="fast">Fast: faster model throughout</option>
+          </select></div>
+        <div><label for="emails">Emails</label>
+          <select id="emails"><option value="">One email</option></select></div>
+        <div><label for="drafts">Drafts</label>
+          <select name="drafts" id="drafts">
+            <option value="1">1 email</option>
+            <option value="2">2 drafts to compare</option>
+            <option value="3">3 drafts to compare</option>
+          </select></div>
+        <div><label for="factCheck">Fact check</label>
+          <select name="fact_check" id="factCheck">
+            <option value="1">On (needs a product)</option>
+            <option value="0">Off</option>
+          </select></div>
+      </div>
+    </fieldset>
+    <div id="seqPlan" class="seq" hidden></div>
+    <button id="go" type="submit">Generate email</button>
+    <div class="hint" style="text-align:center">Your form is saved in this browser and comes back after a refresh. <a id="clearDraft" style="color:var(--accent);cursor:pointer">Start over</a></div>
+  </form>
+
+  <section class="out">
+    <div class="status">
+      <span id="state" class="pill">idle</span>
+      <span id="stage" style="color:var(--muted)"></span>
+    </div>
+    <div id="progress" class="progress"></div>
+    <div class="preview">
+      <div id="frameWrap"><div class="empty"><b>No email yet.</b>
+        <ol><li>Pick <b>Model access</b>.</li><li>Find the company, and a product if the email is about one, so facts come from its graph.</li><li>Write the brief (or let <b>Write it for me</b> draft it), then click <b>Generate email</b>.</li></ol>
+        A run takes several minutes; you can start another while it works.</div></div>
+      <div class="side">
+        <div id="jobs" class="jobs"></div>
+        <div id="links"></div>
+        <div id="editPanel" class="edit"></div>
+        <div id="checks" class="checks"></div>
+        <div id="subjects" class="subjects"></div>
+        <div id="sections" class="sections"></div>
+        <div id="warnings" class="sections"></div>
+        <div id="runs" class="runs"></div>
+      </div>
+    </div>
+    <pre id="log"></pre>
+  </section>
+</main>
+
+<script src="/static/modify.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const ROLES = ["hero_image", "product_image", "lifestyle_image", "header_image", "design_asset"];
+let picked = [];
+
+document.querySelectorAll('input[type=color]').forEach((c) => {
+  const t = document.querySelector(`input[name=${c.dataset.for}]`);
+  c.addEventListener('input', () => { t.value = c.value.toUpperCase(); });
+  t.addEventListener('change', () => { if (/^#[0-9a-f]{6}$/i.test(t.value)) c.value = t.value; });
+});
+
+// New images get a one-line description from the model (what they show), unless one is typed or came with the image.
+// One at a time, so a big drop doesn't start many model calls at once.
+let describeQueue = Promise.resolve();
+function describeSoon(p) {
+  p.describing = true;
+  describeQueue = describeQueue.then(() => describeImage(p)).catch(() => {});
+}
+async function describeImage(p) {
+  if (!picked.includes(p) || p.desc) { p.describing = false; return; }
+  if (p.descEl) p.descEl.placeholder = 'Describing the image…';
+  try {
+    const fd = new FormData();
+    fd.append('file', p.file, p.file.name);
+    fd.append('brand_id', $('#brandId').value);
+    fd.append('product_id', $('#productId').value);
+    fd.append('backend', $('#backend').value);
+    const r = await fetch('/api/images/describe', { method: 'POST', body: fd });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.description && !p.desc) {
+      p.desc = j.description;
+      if (p.descEl && !p.descEl.value) p.descEl.value = j.description;
+    }
+    // The first image stays the hero; the others take the role the model suggests unless you changed it.
+    if (r.ok && j.role && !p.roleTouched && picked.indexOf(p) > 0 && ROLES.includes(j.role)) {
+      p.role = j.role;
+      if (p.selEl) p.selEl.value = j.role;
+    }
+  } finally {
+    p.describing = false;
+    if (p.descEl) p.descEl.placeholder = 'What is in this image?';
+  }
+}
+
+// Images come from the picker, a drop on the zone, or a paste.
+const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
+function addImages(files) {
+  const skipped = [];
+  for (let file of files) {
+    if (!IMAGE_TYPES.includes(file.type)) { skipped.push(file.name || 'pasted item'); continue; }
+    // Uploads are stored by name; pasted screenshots are all "image.png", so give repeats a number.
+    const names = new Set(picked.map((p) => p.file.name));
+    let name = file.name || 'pasted.png';
+    for (let n = 2; names.has(name); n++) name = (file.name || 'pasted.png').replace(/(\.[a-z0-9]+)?$/i, `-${n}$1`);
+    if (name !== file.name) file = new File([file], name, { type: file.type });
+    describeSoon(picked[picked.push({ file, role: picked.length === 0 ? 'hero_image' : 'product_image', desc: '' }) - 1]);
+  }
+  const msg = $('#dropMsg');
+  msg.hidden = !skipped.length;
+  msg.textContent = skipped.length ? `Skipped ${skipped.join(', ')}: only PNG, JPG and WebP images can be used.` : '';
+  renderImgs();
+}
+$('#files').addEventListener('change', (e) => { addImages(e.target.files); e.target.value = ''; });
+
+// ── searching for images (the web, the brand's site, Openverse) ──
+fetch('/api/images/sources').then((r) => r.json()).then((list) => {
+  list.forEach((s) => $('#imgSource').append(new Option(s.label, s.id)));
+}).catch(() => {});
+const toggleImgSearch = () => {
+  const box = $('#imgSearch');
+  box.hidden = !box.hidden;
+  if (!box.hidden) {
+    if ($('#brandId').value && !$('#imgQuery').value) $('#imgSource').value = 'brand';
+    if (!$('#imgQuery').value && $('#productId').value) $('#imgQuery').value = $('#productQuery').value;
+    $('#imgQuery').focus();
+  }
+};
+$('#imgSearchBtn').addEventListener('click', toggleImgSearch);
+$('#imgSearchBtn').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleImgSearch(); } });
+async function searchImages() {
+  const source = $('#imgSource').value;
+  const query = $('#imgQuery').value.trim();
+  const note = $('#imgNote');
+  if (!query && source !== 'brand') { note.textContent = 'Type what the image should show.'; return; }
+  $('#imgGo').disabled = true;
+  $('#imgResults').innerHTML = '';
+  note.textContent = source === 'web' ? 'Searching the web and reading the pages it finds… (20–60s)' : 'Searching…';
+  try {
+    const r = await fetch('/api/images/search', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ source, query, brand_id: $('#brandId').value, product_id: $('#productId').value, backend: $('#backend').value }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.detail || 'Search failed');
+    const results = j.results || [];
+    note.textContent = results.length ? `${results.length} image${results.length > 1 ? 's' : ''}. Click one to add it.` : 'Nothing found. Try other words or another source.';
+    results.forEach((res) => {
+      const tile = Object.assign(document.createElement('div'), { className: 'tile', tabIndex: 0, title: `${res.title}\n${res.credit}${res.license ? ' · ' + res.license : ''}` });
+      tile.innerHTML = `<img src="${esc(res.thumb)}" alt="${esc(res.title)}" loading="lazy" referrerpolicy="no-referrer"><span>${esc(res.title)}</span>`;
+      tile.querySelector('img').onerror = () => tile.remove(); // links that don't load as images
+      const add = () => addFoundImage(res, tile);
+      tile.onclick = add;
+      tile.onkeydown = (e) => { if (e.key === 'Enter') add(); };
+      $('#imgResults').append(tile);
+    });
+  } catch (err) {
+    note.textContent = err.message;
+  } finally {
+    $('#imgGo').disabled = false;
+  }
+}
+async function addFoundImage(res, tile) {
+  if (tile.classList.contains('busy') || tile.classList.contains('added')) return;
+  tile.classList.add('busy');
+  try {
+    const r = await fetch('/api/images/fetch', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: res.url, local: res.local || '', title: res.title, credit: res.credit }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.detail || 'Could not add that image');
+    const blob = await fetch(new URL(j.url, location.href).pathname).then((x) => x.blob()); // same origin as this page
+    const before = picked.length;
+    addImages([new File([blob], j.name, { type: blob.type })]);
+    if (picked.length > before) { picked[picked.length - 1].desc = j.description; renderImgs(); saveDraft(); }
+    tile.classList.add('added');
+    $('#imgNote').textContent = `Added “${res.title}” (${j.width}×${j.height}). Set its role and description below.`;
+  } catch (err) {
+    $('#imgNote').textContent = err.message;
+  } finally {
+    tile.classList.remove('busy');
+  }
+}
+$('#imgGo').addEventListener('click', searchImages);
+$('#imgQuery').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); searchImages(); } });
+const drop = $('#drop');
+let dragDepth = 0;
+const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
+drop.addEventListener('dragenter', (e) => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; drop.classList.add('over'); });
+drop.addEventListener('dragover', (e) => { if (hasFiles(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } });
+drop.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; drop.classList.remove('over'); } });
+drop.addEventListener('drop', (e) => { e.preventDefault(); dragDepth = 0; drop.classList.remove('over'); addImages(e.dataTransfer.files); });
+drop.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#files').click(); } });
+// A file dropped just outside the zone would make the browser open it and leave the page.
+window.addEventListener('dragover', (e) => { if (hasFiles(e)) e.preventDefault(); });
+window.addEventListener('drop', (e) => { if (hasFiles(e)) e.preventDefault(); });
+document.addEventListener('paste', (e) => {
+  const files = [...(e.clipboardData?.files || [])].filter((f) => f.type.startsWith('image/'));
+  if (files.length) { e.preventDefault(); addImages(files); drop.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+});
+
+function renderImgs() {
+  const wrap = $('#imgs');
+  wrap.innerHTML = '';
+  picked.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'img-row';
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(p.file);
+    const fields = document.createElement('div');
+    fields.className = 'fields';
+    const sel = document.createElement('select');
+    ROLES.forEach((r) => { const o = document.createElement('option'); o.value = r; o.textContent = r.replace('_', ' '); if (r === p.role) o.selected = true; sel.append(o); });
+    sel.onchange = () => { p.role = sel.value; p.roleTouched = true; };
+    const desc = document.createElement('input');
+    desc.type = 'text'; desc.placeholder = p.describing ? 'Describing the image…' : 'What is in this image?'; desc.value = p.desc;
+    desc.oninput = () => { p.desc = desc.value; };
+    p.descEl = desc;
+    p.selEl = sel;
+    const rm = document.createElement('a');
+    rm.href = '#'; rm.textContent = `Remove ${p.file.name}`; rm.style.fontSize = '12px'; rm.style.color = 'var(--muted)';
+    rm.onclick = (ev) => { ev.preventDefault(); picked.splice(i, 1); renderImgs(); };
+    fields.append(sel, desc, rm);
+    row.append(img, fields);
+    wrap.append(row);
+  });
+}
+
+let backends = [];
+async function loadBackends(refresh = false, prefer = '') {
+  const s = await fetch(`/api/status${refresh ? '?refresh=1' : ''}`).then((r) => r.json());
+  backends = s.backends;
+  const sel = $('#backend');
+  const keep = prefer || sel.value;
+  sel.innerHTML = '';
+  backends.forEach((b) => {
+    const o = document.createElement('option');
+    o.value = b.id;
+    o.textContent = `${b.label}${b.ready ? '' : ' (not set up)'}`;
+    o.disabled = !b.ready;
+    sel.append(o);
+  });
+  sel.value = (keep && backends.find((b) => b.id === keep && b.ready)) ? keep : (s.default || '');
+  modelOptions = s.model_options || {};
+  modelSettings = s.model_settings || {};
+  showBackendNote();
+}
+
+// ── model and effort for the chosen model access (saved on the server; used by everything it runs) ──
+let modelOptions = {};
+let modelSettings = {};
+function renderModelChoice() {
+  const opts = modelOptions[$('#backend').value];
+  $('#modelRow').hidden = !opts;
+  if (!opts) { $('#modelNote').textContent = ''; return; }
+  const cur = modelSettings[$('#backend').value] || { model: '', effort: '' };
+  $('#model').innerHTML = opts.models.map((m) => `<option value="${esc(m.id)}">${esc(m.label)}</option>`).join('');
+  $('#model').value = opts.models.some((m) => m.id === cur.model) ? cur.model : '';
+  renderEfforts(cur.effort);
+}
+function renderEfforts(keep) {
+  const opts = modelOptions[$('#backend').value];
+  const m = opts.models.find((x) => x.id === $('#model').value) || opts.models[0];
+  const eff = $('#effort');
+  const own = m.default_effort ? `Model default (${m.default_effort})` : "Each step's own";
+  eff.innerHTML = `<option value="">${m.efforts.length ? own : 'Set per step'}</option>` + m.efforts.map((e) => `<option value="${esc(e)}">${esc(e)}</option>`).join('');
+  eff.disabled = !m.efforts.length;
+  eff.value = m.efforts.includes(keep) ? keep : '';
+  modelHint();
+}
+function modelHint() {
+  const opts = modelOptions[$('#backend').value];
+  if (!opts) return;
+  const chosen = $('#model').value;
+  const speedNote = chosen && $('#speed') && $('#speed').value !== 'best' ? ' A chosen model is used for every step, so Speed no longer switches models.' : '';
+  $('#modelNote').textContent = `${chosen ? 'Every step uses this model.' : 'Each step uses the model the pipeline picks for it.'} ${opts.effort_note}${speedNote} Applies to emails, briefs, graph lookups and edits.`;
+}
+async function saveModelChoice() {
+  const backend = $('#backend').value;
+  const r = await fetch('/api/model-settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ backend, model: $('#model').value, effort: $('#effort').value }) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { $('#modelNote').textContent = j.detail || 'Could not save'; return; }
+  modelSettings[backend] = { model: j.model, effort: j.effort };
+  modelHint();
+  $('#modelNote').textContent = `Saved: ${j.label}. ` + $('#modelNote').textContent;
+}
+$('#model').addEventListener('change', () => { renderEfforts($('#effort').value); saveModelChoice(); });
+$('#effort').addEventListener('change', saveModelChoice);
+$('#speed').addEventListener('change', modelHint);
+function showBackendNote() {
+  const b = backends.find((x) => x.id === $('#backend').value);
+  const note = $('#backendNote');
+  note.classList.toggle('err', !b);
+  note.textContent = b ? b.detail : 'No model access is set up. Log in to Claude Code (claude auth login) or ChatGPT (codex login), or add ANTHROPIC_API_KEY to local/.env.';
+  $('#go').disabled = !b;
+  renderModelChoice();
+}
+$('#backend').addEventListener('change', showBackendNote);
+
+$('#f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const cards = [...document.querySelectorAll('#seqPlan .card')];
+  if ($('#emails').value && !cards.length) { planSequence(); return; }
+  const fd = new FormData($('#f'));
+  if ($('#emails').value) fd.append('sequence', JSON.stringify(cards.map((c) => ({ name: c.dataset.name, send: c.dataset.send, brief: c.querySelector('textarea').value }))));
+  picked.forEach((p) => fd.append('images', p.file, p.file.name));
+  fd.append('image_roles', JSON.stringify(picked.map((p) => p.role)));
+  fd.append('image_descriptions', JSON.stringify(picked.map((p) => p.desc)));
+  const go = $('#go'), label = go.textContent;
+  go.disabled = true;
+  go.textContent = 'Starting…';
+  try {
+    const r = await fetch('/api/runs', { method: 'POST', body: fd });
+    const j = await r.json();
+    if (!r.ok) { setState('error', j.detail || 'Request failed'); return; }
+    focusRun(j.run_id);
+    pollJobs();
+    if ($('#emails').value) syncEmailsMode();  // the sequence is queued; the next click plans a new one
+  } finally {
+    go.disabled = false;
+    if (go.textContent === 'Starting…') go.textContent = label;  // sequence mode may have relabelled it
+  }
+});
+
+// ── runs in progress (several can run at once) ──
+let focused = null;
+let jobsTimer = null;
+const fmtTime = (s) => (s >= 60 ? `${Math.floor(s / 60)}m ${String(Math.round(s % 60)).padStart(2, '0')}s` : `${Math.round(s)}s`);
+function runLabel(j) { return j.group ? `${j.group.label}${j.group.kind === 'sequence' && j.group.send ? ` · ${j.group.send}` : ''}` : 'Email'; }
+
+function focusRun(id) {
+  focused = id;
+  $('#log').textContent = '';
+  ['#links', '#subjects', '#sections', '#warnings', '#checks', '#progress', '#editPanel'].forEach((sel) => { $(sel).innerHTML = ''; });
+  $('#frameWrap').innerHTML = '<div class="empty">Generating… the email will appear here.</div>';
+  poll(id, 0);
+  pollJobs();
+}
+
+async function pollJobs() {
+  clearTimeout(jobsTimer);
+  const jobs = await fetch('/api/jobs').then((r) => r.json()).catch(() => []);
+  const box = $('#jobs');
+  box.innerHTML = jobs.length ? '<b>This session</b>' : '';
+  const groupsDone = new Map();
+  jobs.slice(0, 12).forEach((j) => {
+    if (j.group) {
+      const g = groupsDone.get(j.group.id) || { kind: j.group.kind, total: j.group.total, done: 0 };
+      g.done += j.state === 'done' ? 1 : 0;
+      groupsDone.set(j.group.id, g);
+    }
+    const d = document.createElement('div');
+    d.className = j.id === focused ? 'focus' : '';
+    const status = j.state === 'queued' ? `queued${j.queued_ahead ? ` behind ${j.queued_ahead}` : ''}`
+      : j.state === 'running' ? `${j.percent}% · about ${fmtTime(j.eta_s)} left` : j.state === 'done' ? `done in ${fmtTime(j.elapsed_s)}` : 'failed';
+    d.innerHTML = `<span><b></b> <span class="meta2"></span></span><div class="bar"><i style="width:${j.state === 'done' ? 100 : j.percent}%"></i></div><span class="meta2 brief"></span>`;
+    d.querySelector('b').textContent = runLabel(j);
+    d.querySelector('.meta2').textContent = `${status}${j.speed && j.speed !== 'best' ? ` · ${j.speed}` : ''}${j.model && j.model !== "pipeline's models" ? ` · ${j.model}` : ''}`;
+    d.querySelector('.brief').textContent = j.brief;
+    d.onclick = () => focusRun(j.id);
+    box.append(d);
+  });
+  groupsDone.forEach((g, id) => {
+    if (g.done < 2) return;
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'ghost'; btn.style.marginTop = '6px';
+    btn.textContent = g.kind === 'sequence' ? `View the sequence (${g.done}/${g.total} ready)` : `Compare drafts side by side (${g.done}/${g.total} ready)`;
+    btn.onclick = () => showGroup(id);
+    box.append(btn);
+  });
+  if (jobs.some((j) => j.state === 'running' || j.state === 'queued')) jobsTimer = setTimeout(pollJobs, 2000);
+}
+
+async function showGroup(id) {
+  focused = null;
+  const r = await fetch(`/api/groups/${id}`);
+  const g = await r.json().catch(() => ({}));
+  if (!r.ok) { setState('error', g.detail || 'That group of emails is no longer available'); return; }
+  ['#links', '#subjects', '#sections', '#warnings', '#checks', '#progress'].forEach((sel) => { $(sel).innerHTML = ''; });
+  setState('idle', g.kind === 'sequence' ? `Sequence of ${g.runs.length} emails` : `${g.runs.length} drafts side by side`);
+  $('#frameWrap').innerHTML = `<div class="compare">${g.runs.map((r) => `<div><h4>${r.label || ''}${r.send ? ` · ${r.send}` : ''} <a data-run="${r.run_id}" style="color:var(--accent);cursor:pointer;font-weight:400">open</a></h4>${r.html_url ? `<iframe src="${samePath(r.html_url)}?t=${Date.now()}"></iframe>` : `<div class="empty">${r.state}…</div>`}</div>`).join('')}</div>`;
+  document.querySelectorAll('.compare a[data-run]').forEach((a) => { a.onclick = () => openPastRun(a.dataset.run); });
+}
+
+async function openPastRun(id) {
+  const runs = await fetch('/api/runs').then((r) => r.json());
+  const r = runs.find((x) => x.run_id === id);
+  if (r) { focused = id; setState('idle', `Viewing run ${id}`); showFiles(r); }
+  else focusRun(id);
+}
+
+// Background requests (status, polling) don't catch their own failures: say what happened instead of freezing.
+window.addEventListener('unhandledrejection', (e) => {
+  const offline = e.reason instanceof TypeError && /fetch|network|load failed/i.test(e.reason.message);
+  setState('error', offline ? "Can't reach the app server. Check that ./run.sh is still running, then reload this page."
+    : `Something went wrong: ${(e.reason && e.reason.message) || e.reason}`);
+});
+
+// A run that failed or can't be loaded: replace the "Generating…" placeholder so the page doesn't look busy.
+function runStopped(message) {
+  setState('error', message);
+  const wrap = $('#frameWrap');
+  if (!wrap.querySelector('iframe')) {
+    wrap.innerHTML = `<div class="empty"><b>This run didn't finish.</b> ${esc(message || '')}${$('#log').textContent ? '<br>The log below has the details.' : ''}</div>`;
+  }
+}
+
+function setState(state, stage) {
+  const p = $('#state'); p.className = `pill ${state}`; p.textContent = state;
+  $('#stage').textContent = stage || '';
+}
+
+function showProgress(j) {
+  const box = $('#progress');
+  if (j.state === 'done') { box.innerHTML = ''; return; }
+  box.innerHTML = `<div class="bar"><i style="width:${j.percent}%"></i></div>
+    <div class="steps">${j.steps.map((s) => `<span class="${s.state}">${s.state === 'done' ? '✓' : s.state === 'running' ? '●' : '○'} ${s.label}${s.state === 'running' ? ` (${fmtTime(s.spent_s)} of ~${fmtTime(s.estimate_s)})` : ''}</span>`).join('')}</div>`;
+}
+
+async function poll(id, since) {
+  if (id !== focused) return;
+  const r = await fetch(`/api/runs/${id}?since=${since}`);
+  const j = await r.json().catch(() => ({}));
+  if (id !== focused) return;
+  if (!r.ok) return runStopped(j.detail || `Couldn't load run ${id}`);
+  const left = j.state === 'running' ? ` · about ${fmtTime(j.eta_s)} left` : j.state === 'queued' ? (j.queued_ahead ? ` · ${j.queued_ahead} ahead in the queue` : ' · starting soon') : '';
+  setState(j.state, `${runLabel(j)} · ${j.stage} · ${fmtTime(j.elapsed_s)}${left}${j.backend ? ` · ${(backends.find((b) => b.id === j.backend) || {}).label || j.backend}` : ''}`);
+  showProgress(j);
+  if (j.log.length) { const l = $('#log'); l.textContent += j.log.join('\n') + '\n'; l.scrollTop = l.scrollHeight; }
+  if (j.state === 'done') return showResult(j.result);
+  if (j.state === 'error') return runStopped(j.error);
+  setTimeout(() => poll(id, j.log_len), 1500);
+}
+
+const VIEWS = { desktop: 'Desktop', mobile: 'Mobile', dark: 'Dark mode (simulated)' };
+let currentView = 'desktop';
+function applyView() {
+  const f = document.querySelector('#frameWrap iframe');
+  if (!f) return;
+  document.querySelectorAll('.viewbar button').forEach((b) => b.classList.toggle('on', b.dataset.view === currentView));
+  f.style.maxWidth = currentView === 'mobile' ? '375px' : '640px';
+  const doc = f.contentDocument;
+  if (!doc || !doc.head) return;
+  let st = doc.getElementById('__dark');
+  if (currentView === 'dark') {
+    // Roughly what Outlook and the Gmail app do: flip light backgrounds and text, leave photos alone.
+    if (!st) { st = doc.createElement('style'); st.id = '__dark'; doc.head.append(st); }
+    st.textContent = 'html { filter: invert(1) hue-rotate(180deg); background: #fff; } img { filter: invert(1) hue-rotate(180deg); }';
+  } else if (st) st.remove();
+}
+function showFiles(res) {
+  $('#frameWrap').innerHTML = `<div class="viewbar">${Object.entries(VIEWS).map(([k, v]) => `<button type="button" data-view="${k}">${v}</button>`).join('')}
+    <button type="button" class="comment" title="Click on the email to pin a note to that spot">Comment</button>
+    <span>Dark mode is an approximation of how Outlook and the Gmail app recolor emails.</span></div>
+    <iframe src="${samePath(res.html_url)}?t=${Date.now()}" title="Rendered email"></iframe>`;
+  document.querySelectorAll('.viewbar button[data-view]').forEach((b) => { b.onclick = () => { currentView = b.dataset.view; applyView(); }; });
+  const frame = document.querySelector('#frameWrap iframe');
+  frame.addEventListener('load', () => { applyView(); wireComments(frame); drawPins(frame); });
+  document.querySelector('.viewbar .comment').onclick = (ev) => { commentMode = !commentMode; ev.target.classList.toggle('on', commentMode); };
+  showChecks(res.checks || []);
+  showEditPanel(res);
+  const t = res.timings;
+  const links = $('#links');
+  links.innerHTML = `<b>Download</b>
+    <div class="dl">
+      <a class="primary" href="${res.downloads.html}">Email (.html)</a>
+      <a href="${res.downloads.subjects}">Subject lines (.txt)</a>
+      <a href="${res.downloads.zip}">Everything (.zip)</a>
+    </div>
+    <span style="color:var(--muted);font-size:12px">The .html opens anywhere, with images built in. For an email platform, use the .zip: email.html plus an images/ folder.</span><br>
+    <span style="color:var(--muted);font-size:12px">Source: <a href="${res.mjml_url}" target="_blank">email.mjml</a> · <a href="${res.blueprint_url}" target="_blank">blueprint.json</a>${t ? ` · ${Math.round(t.blueprint_s + t.art_direction_s + t.render_s)}s` : ''}</span>`;
+  if (res.placeholder_links && res.placeholder_links.length) {
+    const w = document.createElement('div'); w.className = 'warn';
+    w.textContent = `Replace the placeholder link before sending: ${res.placeholder_links.join(', ')}`;
+    links.append(w);
+  }
+  const subj = $('#subjects');
+  subj.innerHTML = '<b>Subject lines</b>';
+  if (!res.subject_lines.length) subj.append(Object.assign(document.createElement('div'), { textContent: 'None generated for this run.' }));
+  res.subject_lines.forEach((o, i) => {
+    const d = document.createElement('div');
+    d.append(Object.assign(document.createElement('div'), { textContent: `${i + 1}. ${o.subject}` }));
+    d.append(Object.assign(document.createElement('div'), { className: 'ph', textContent: o.preheader }));
+    subj.append(d);
+  });
+}
+
+// ── editing: notes pinned on the email, applied section by section; every edit is a version ──
+let commentMode = false;
+let notes = [];          // {section, text, x, y}
+let editRun = null;      // run id the notes belong to
+let sectionList = [];
+
+function sectionsInFrame(doc) {
+  // The renderer brackets each section with <!-- Section:Start id --> … <!-- Section:End id -->.
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_COMMENT);
+  const starts = {}; const out = [];
+  for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+    const m = n.nodeValue.trim().match(/^Section:(Start|End) (.+)$/);
+    if (!m) continue;
+    if (m[1] === 'Start') starts[m[2]] = n;
+    else if (starts[m[2]]) {
+      const r = doc.createRange(); r.setStartAfter(starts[m[2]]); r.setEndBefore(n);
+      const b = r.getBoundingClientRect();
+      out.push({ id: m[2], top: b.top + doc.defaultView.scrollY, bottom: b.bottom + doc.defaultView.scrollY });
+    }
+  }
+  return out;
+}
+
+function wireComments(frame) {
+  const doc = frame.contentDocument;
+  if (!doc) return;
+  doc.addEventListener('click', (ev) => {
+    if (!commentMode) return;
+    ev.preventDefault(); ev.stopPropagation();
+    const y = ev.pageY, x = ev.pageX;
+    const secs = sectionsInFrame(doc);
+    const hit = secs.find((s) => y >= s.top && y <= s.bottom) || secs.reduce((best, s) => (!best || Math.abs((s.top + s.bottom) / 2 - y) < Math.abs((best.top + best.bottom) / 2 - y) ? s : best), null);
+    if (!hit) return;
+    const text = prompt(`Note for the "${hit.id}" section:`);
+    if (!text || !text.trim()) return;
+    notes.push({ section: hit.id, text: text.trim(), x, y });
+    drawPins(frame); renderNotes();
+  }, true);
+}
+
+function drawPins(frame) {
+  const doc = frame.contentDocument;
+  if (!doc || !doc.body) return;
+  doc.querySelectorAll('.__pin').forEach((p) => p.remove());
+  notes.forEach((n, i) => {
+    if (n.x == null) return;
+    const p = doc.createElement('div');
+    p.className = '__pin'; p.textContent = String(i + 1);
+    p.style.cssText = `position:absolute;left:${n.x - 11}px;top:${n.y - 11}px;width:22px;height:22px;border-radius:50%;background:#1f4fd1;color:#fff;font:700 12px/22px sans-serif;text-align:center;z-index:9999;box-shadow:0 1px 4px rgba(0,0,0,.4);pointer-events:none`;
+    doc.body.append(p);
+  });
+}
+
+function renderNotes() {
+  const list = $('#notesList');
+  if (!list) return;
+  list.innerHTML = notes.length ? '' : '<div class="hint">No notes yet. Turn on Comment and click the email, or add one below.</div>';
+  notes.forEach((n, i) => {
+    const d = document.createElement('div');
+    d.className = 'note';
+    d.innerHTML = `<span class="num">${i + 1}</span><span><b></b> <span></span></span><a>remove</a>`;
+    d.querySelector('b').textContent = n.section;
+    d.querySelector('span span').textContent = n.text;
+    d.querySelector('a').onclick = () => { notes.splice(i, 1); renderNotes(); const f = document.querySelector('#frameWrap iframe'); if (f) drawPins(f); };
+    list.append(d);
+  });
+  const btn = $('#applyNotes');
+  if (btn) { btn.disabled = !notes.length; btn.textContent = notes.length ? `Apply ${notes.length} note${notes.length > 1 ? 's' : ''}` : 'Apply notes'; }
+}
+
+async function showEditPanel(res) {
+  if (editRun !== res.run_id) { notes = []; editRun = res.run_id; }
+  sectionList = await fetch(`/api/runs/${res.run_id}/sections`).then((r) => (r.ok ? r.json() : [])).catch(() => []);
+  const vers = res.versions || [];
+  $('#editPanel').innerHTML = `<b>Edit</b> <span class="hint">Pin notes on the email (Comment) or add them here; only the sections you note are changed.</span>
+    <div id="notesList"></div>
+    <div class="add"><select id="noteSection">${sectionList.map((s) => `<option value="${esc(s.id)}">${esc(s.id)}: ${esc(s.text.slice(0, 50))}</option>`).join('')}</select>
+      <textarea id="noteText" rows="2" placeholder="e.g. shorter headline; swap the two photos; make the button label “Get yours”"></textarea>
+      <div style="display:flex;gap:8px;align-items:center"><button type="button" class="ghost" id="addNote">Add note</button>
+      <button type="button" class="apply" id="applyNotes" disabled>Apply notes</button><span id="editStatus" class="hint"></span></div></div>
+    ${vers.length ? `<div class="versions" style="margin-top:10px"><b>Versions</b>${[...vers].reverse().map((v) => `<div>v${v.n} · ${esc(v.note)} ${v.current ? '<span class="cur">CURRENT</span>' : `<a data-view="${esc(v.url)}">view</a> · <a data-restore="${v.n}">restore</a>`}</div>`).join('')}</div>` : ''}`;
+  renderNotes();
+  $('#addNote').onclick = () => {
+    const text = $('#noteText').value.trim();
+    if (!text || !$('#noteSection').value) return;
+    notes.push({ section: $('#noteSection').value, text });
+    $('#noteText').value = '';
+    renderNotes();
+  };
+  $('#applyNotes').onclick = () => applyNotes(res.run_id);
+  document.querySelectorAll('.versions a[data-view]').forEach((a) => { a.onclick = () => { document.querySelector('#frameWrap iframe').src = `${samePath(a.dataset.view)}?t=${Date.now()}`; }; });
+  document.querySelectorAll('.versions a[data-restore]').forEach((a) => {
+    a.onclick = async () => {
+      const r = await fetch(`/api/runs/${res.run_id}/versions/${a.dataset.restore}/restore`, { method: 'POST' });
+      if (r.ok) { const files = await r.json(); showFiles({ ...res, ...files }); }
+    };
+  });
+}
+
+async function applyNotes(runId) {
+  const status = $('#editStatus');
+  $('#applyNotes').disabled = true;
+  status.style.color = '';
+  try {
+    const r = await fetch(`/api/runs/${runId}/edit`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes: notes.map(({ section, text }) => ({ section, text })), backend: $('#backend').value }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || 'Failed');
+    for (;;) {
+      const s = await fetch(`/api/brand-jobs/${j.job_id}`).then((x) => x.json());
+      if (s.state === 'done') { notes = []; showFiles(s.edit); return; }
+      if (s.state === 'error') throw new Error(s.error);
+      status.textContent = `${s.stage} · ${Math.round(s.elapsed_s)}s`;
+      await new Promise((res) => setTimeout(res, 1500));
+    }
+  } catch (err) {
+    status.style.color = 'var(--err)';
+    status.textContent = err.message;
+    $('#applyNotes').disabled = false;
+  }
+}
+
+function showChecks(checks) {
+  const box = $('#checks');
+  if (!checks.length) { box.innerHTML = ''; return; }
+  const order = { warn: 0, fixed: 1, skipped: 2, pass: 3 };
+  const counts = checks.reduce((a, c) => ({ ...a, [c.status]: (a[c.status] || 0) + 1 }), {});
+  box.innerHTML = `<b>Checks</b> <span style="color:var(--muted);font-size:12px">${['fixed', 'warn', 'pass'].filter((k) => counts[k]).map((k) => `${counts[k]} ${k === 'warn' ? 'to review' : k}`).join(' · ')}</span>`;
+  [...checks].sort((a, b) => order[a.status] - order[b.status]).forEach((c) => {
+    const d = document.createElement('div');
+    d.innerHTML = `<span class="st ${c.status}">${c.status === 'warn' ? 'review' : c.status}</span><span><b></b> <span></span></span>`;
+    d.querySelector('b').textContent = c.check;
+    d.querySelector('span span').textContent = c.detail;
+    box.append(d);
+  });
+}
+
+function showResult(res) {
+  showFiles(res);
+  const secs = $('#sections');
+  secs.innerHTML = '<b>Blueprint sections</b>';
+  res.sections.forEach((s) => {
+    const d = document.createElement('div');
+    d.innerHTML = `<b></b> <span style="color:var(--muted)"></span><br>`;
+    d.querySelector('b').textContent = s.type || 'section';
+    d.querySelector('span').textContent = s.headline || '';
+    d.append(document.createTextNode(typeof s.copy === 'string' ? s.copy : JSON.stringify(s.copy || '')));
+    secs.append(d);
+  });
+  if (res.warnings.length) {
+    const w = $('#warnings'); w.innerHTML = '<b>Pipeline warnings</b>';
+    res.warnings.forEach((x) => { const d = document.createElement('div'); d.textContent = typeof x === 'string' ? x : JSON.stringify(x); w.append(d); });
+  }
+  loadRuns();
+}
+
+async function loadRuns() {
+  const runs = await fetch('/api/runs').then((r) => r.json()).catch(() => []);
+  const box = $('#runs');
+  box.innerHTML = runs.length ? '<b>Past runs</b>' : '';
+  runs.forEach((r) => {
+    const d = document.createElement('div');
+    const a = document.createElement('a');
+    a.textContent = `${r.created} · ${(r.subject_lines[0] || {}).subject || r.run_id}`;
+    a.onclick = () => { $('#sections').innerHTML = ''; $('#warnings').innerHTML = ''; setState('idle', `Viewing run ${r.run_id}`); showFiles(r); window.scrollTo(0, 0); };
+    d.append(a);
+    box.append(d);
+  });
+}
+
+// ── company knowledge graphs ──
+const BRAND_FIELDS = ['brand_name', 'tagline', 'background', 'text_color', 'accent', 'accent_text', 'font', 'voice', 'rules'];
+
+async function loadBrands() {
+  const list = await fetch('/api/brands').then((r) => r.json()).catch(() => []);
+  const box = $('#savedBrands');
+  box.innerHTML = '';
+  list.slice(0, 12).forEach((b) => {
+    const a = Object.assign(document.createElement('a'), { textContent: b.name, title: `Saved: ${b.domain}` });
+    a.onclick = async () => applyBrand(await fetch(`/api/brands/${b.id}`).then((r) => r.json()), true);
+    box.append(a);
+  });
+}
+
+function brandCard(html) { const c = $('#brandCard'); c.hidden = false; c.innerHTML = html; return c; }
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+// Serve previews from this page's own origin so it can reach into them (comment pins, dark-mode preview).
+const samePath = (u) => { try { const x = new URL(u, location.href); return x.pathname + x.search; } catch (e) { return u; } };
+const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+async function findBrand(refresh = false) {
+  const query = refresh ? ($('#brandCard').dataset.domain || $('#brandQuery').value) : $('#brandQuery').value;
+  if (!query.trim()) return;
+  $('#brandFind').disabled = true;
+  brandCard(`<div class="meta">Looking up ${esc(query)}…</div>`);
+  try {
+    const r = await fetch('/api/brands', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, backend: $('#backend').value, refresh }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || 'Search failed');
+    if (j.status === 'found') applyBrand(j.brand, true);
+    else await pollBrand(j.job_id);
+  } catch (err) {
+    brandCard(`<div class="meta" style="color:var(--err)">${esc(err.message)}</div>`);
+  } finally {
+    $('#brandFind').disabled = false;
+  }
+}
+
+async function pollBrand(id) {
+  for (;;) {
+    const j = await fetch(`/api/brand-jobs/${id}`).then((r) => r.json());
+    if (j.state === 'done') { applyBrand(j.brand, false); loadBrands(); return; }
+    if (j.state === 'error') throw new Error(j.error);
+    brandCard(`<div class="meta">Building the company graph · ${esc(j.stage)} · ${Math.round(j.elapsed_s)}s<br>This happens once per company; later searches reuse it.</div>`);
+    await new Promise((res) => setTimeout(res, 1500));
+  }
+}
+
+function applyBrand(b, reused) {
+  BRAND_FIELDS.forEach((f) => {
+    const el = document.querySelector(`[name=${f}]`);
+    if (el && b[f] !== undefined && b[f] !== null) el.value = b[f];
+    const swatch = document.querySelector(`input[type=color][data-for=${f}]`);
+    if (swatch && /^#[0-9a-f]{6}$/i.test(b[f] || '')) swatch.value = b[f].toLowerCase();
+  });
+  $('#brandId').value = b.id;
+  $('#brandQuery').value = b.name;
+  const logo = (b.logos || []).find((l) => l.background === (lum(b.background) < 0.35 ? 'dark' : 'light')) || (b.logos || [])[0];
+  const c = brandCard(`
+    <div class="logo" style="background:${esc(b.background)}">${logo ? `<img src="${esc(logo.url)}" alt="${esc(b.name)} logo">` : `<span style="color:${esc(b.text_color)}">No logo found on the site</span>`}</div>
+    <div class="meta"><b>${esc(b.name)}</b> · ${esc(b.domain)} · ${reused ? 'reused saved graph' : 'new graph saved'}<br>
+      ${plural((b.socials || []).length, 'social link')} · ${plural((b.products || []).length, 'saved product')}${b.address ? ' · address' : ''} · font ${esc(b.font)}<br>
+      ${branchNote(b.branches)}
+      The logo, links and footer details go into the email. <a href="/graph/${esc(b.id)}" target="_blank" style="cursor:pointer">View graph</a> · <a href="/design/${esc(b.id)}" target="_blank">Design</a> · <a data-act="modify">Modify</a> · <a data-act="rebuild">Rebuild from site</a> · <a data-act="clear">Don't use</a></div>`);
+  c.dataset.domain = b.domain;
+  const bHost = modifyHost(c, b.id);
+  c.querySelector('[data-act=modify]').onclick = () => GraphModify.open(bHost, {
+    base: `/api/brands/${b.id}`, backend: () => $('#backend').value,
+    onApplied: (j) => { if (j.brand) applyBrand(j.brand, true); },
+  });
+  c.querySelector('[data-act=rebuild]').onclick = () => findBrand(true);
+  c.querySelector('[data-act=clear]').onclick = () => { $('#brandId').value = ''; c.hidden = true; bHost.innerHTML = ''; clearProduct(); $('#productBox').hidden = true; };
+  if ($('#productBox').dataset.brand !== b.id) { clearProduct(); $('#productQuery').value = ''; }
+  $('#productBox').dataset.brand = b.id;
+  $('#productBox').hidden = false;
+  loadProducts(b.id);
+}
+
+// ── product graphs (one per product, linked to the brand) ──
+const brandIdNow = () => $('#brandId').value;
+function clearProduct() {
+  $('#productId').value = ''; $('#productCard').hidden = true;
+  const h = $('#productCard').nextElementSibling;
+  if (h && h.classList.contains('modify-host')) h.innerHTML = '';
+}
+// The Modify panel sits just after a card (the card redraws itself after a save) and is cleared when the card switches graphs.
+function modifyHost(card, key) {
+  let h = card.nextElementSibling;
+  if (!h || !h.classList.contains('modify-host')) { h = Object.assign(document.createElement('div'), { className: 'modify-host' }); card.after(h); }
+  if (h.dataset.key !== key) { h.innerHTML = ''; h.dataset.key = key; }
+  return h;
+}
+function productCard(html) { const c = $('#productCard'); c.hidden = false; c.innerHTML = html; return c; }
+
+async function loadProducts(brandId) {
+  const list = await fetch(`/api/brands/${brandId}/products`).then((r) => r.json()).catch(() => []);
+  const box = $('#savedProducts');
+  box.innerHTML = '';
+  list.slice(0, 12).forEach((p) => {
+    const a = Object.assign(document.createElement('a'), { textContent: p.name, title: `Saved: ${p.url}` });
+    a.onclick = async () => applyProduct(await fetch(`/api/brands/${brandId}/products/${p.id}`).then((r) => r.json()), true);
+    box.append(a);
+  });
+}
+
+async function findProduct(refresh = false) {
+  const brandId = brandIdNow();
+  const query = refresh ? ($('#productCard').dataset.url || $('#productQuery').value) : $('#productQuery').value;
+  if (!brandId || !query.trim()) return;
+  $('#productFind').disabled = true;
+  productCard(`<div class="meta">Looking up ${esc(query)}…</div>`);
+  try {
+    const r = await fetch(`/api/brands/${brandId}/products`, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, backend: $('#backend').value, refresh }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || 'Search failed');
+    if (j.status === 'found') applyProduct(j.product, true);
+    else {
+      for (;;) {
+        const s = await fetch(`/api/brand-jobs/${j.job_id}`).then((x) => x.json());
+        if (s.state === 'done') { applyProduct(s.product, false); loadProducts(brandId); loadBrands(); break; }
+        if (s.state === 'error') throw new Error(s.error);
+        productCard(`<div class="meta">Building the product graph · ${esc(s.stage)} · ${Math.round(s.elapsed_s)}s<br>Once per product; later searches reuse it.</div>`);
+        await new Promise((res) => setTimeout(res, 1500));
+      }
+    }
+  } catch (err) {
+    productCard(`<div class="meta" style="color:var(--err)">${esc(err.message)}</div>`);
+  } finally {
+    $('#productFind').disabled = false;
+  }
+}
+
+function placementNote(pl, brandId) {
+  if (!pl || (!pl.category && !(pl.featured || []).length)) return '';
+  const link = (c) => c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.name)}</a>` : esc(c.name);
+  const slug = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const all = pl.category && brandId ? ` (<a href="/graph/${esc(brandId)}/collection/${esc(slug(pl.category.name))}" target="_blank">all ${esc(pl.category.name)} in the graph</a>)` : '';
+  return `<b>In</b> ${pl.category ? link(pl.category) : 'no category'}${all}${(pl.featured || []).length ? ` · also featured in ${pl.featured.map(link).join(', ')}` : ''}<br>`;
+}
+function branchNote(branches) {
+  const names = Object.keys(branches || {});
+  if (!names.length) return '';
+  const n = Object.values(branches).reduce((a, f) => a + f.length, 0);
+  return `<b>Added branches:</b> ${names.map(esc).join(', ')} (${plural(n, 'fact')}, used in the copy)<br>`;
+}
+function checkLine(p) {
+  if (!p.last_checked) return 'Page not re-checked yet (checked automatically every 7 days).';
+  const days = Math.floor((Date.now() - new Date(p.last_checked).getTime()) / 86400000);
+  const when = days <= 0 ? 'today' : days === 1 ? 'yesterday' : `${days} days ago`;
+  return p.recent_changes && p.recent_changes.length ? `Checked ${when} · changed: ${esc(p.recent_changes.join('; '))}` : `Checked ${when} · no changes`;
+}
+const LOGO_MODES = { brand: 'Brand logo only (default)', both: 'Brand logo in header + product logo above the product', product: 'Product logo replaces the brand logo' };
+function identityNote(p) {
+  const id = p.identity || {};
+  const bits = [id.colors && Object.keys(id.colors).length && 'colors', id.font && 'font', id.voice && 'voice'].filter(Boolean);
+  let html = bits.length ? `<br><b>Own look:</b> this product's ${bits.join(', ')} replace the brand's in its emails.` : '';
+  if (id.logos && id.logos.length) {
+    html += `<br><label style="margin:6px 0 2px">Logo in emails</label><select data-act="logomode">${Object.entries(LOGO_MODES)
+      .map(([k, v]) => `<option value="${k}" ${k === (p.logo_mode || 'brand') ? 'selected' : ''}>${v}</option>`).join('')}</select>`;
+  }
+  return html;
+}
+function applyIdentity(p) {
+  // A product with its own look (set in its graph) overrides the brand's style fields.
+  const id = p.identity || {};
+  const map = { background: 'background', text: 'text_color', accent: 'accent', accent_text: 'accent_text' };
+  for (const [role, field] of Object.entries(map)) {
+    const hex = id.colors && id.colors[role];
+    if (!hex) continue;
+    document.querySelector(`[name=${field}]`).value = hex;
+    const sw = document.querySelector(`input[type=color][data-for=${field}]`);
+    if (sw) sw.value = hex.toLowerCase();
+  }
+  if (id.font) document.querySelector('[name=font]').value = id.font;
+  if (id.voice) document.querySelector('[name=voice]').value = id.voice;
+}
+
+function applyProduct(p, reused) {
+  $('#productId').value = p.id;
+  $('#productQuery').value = p.name;
+  const thumbs = (p.images || []).slice(0, 4).map((i) => `<img src="${esc(i.url)}" alt="${esc(i.description || p.name)}" title="${esc(i.role)}: ${esc(i.description)}">`).join('');
+  const facts = (p.features || []).slice(0, 3).map((f) => `<li>${esc(f)}</li>`).join('');
+  const c = productCard(`
+    ${thumbs ? `<div class="thumbs">${thumbs}</div>` : ''}
+    <div class="meta"><b>${esc(p.name)}</b>${p.price ? ` · ${esc(p.price)}` : ''} · ${reused ? 'reused saved graph' : 'new graph saved'}<br>
+      ${plural((p.images || []).length, 'photo')} · ${plural((p.features || []).length, 'fact')}${(p.variants || []).length ? ` · ${plural(p.variants.length, 'variant')}` : ''}
+      ${facts ? `<ul class="facts">${facts}</ul>` : ''}
+      ${placementNote(p.placement, p.brand_id)}
+      ${branchNote(p.branches)}
+      Its photos go into the email, the copy uses only these facts, and buttons link to the product page.
+      ${identityNote(p)}
+      <br><span id="checkLine">${checkLine(p)}</span>
+      <br><a href="/graph/${esc(p.brand_id)}/${esc(p.id)}" target="_blank">View graph</a> · <a data-act="modify">Modify</a> · <a data-act="check">Check page now</a> · <a data-act="rebuild">Rebuild from page</a> · <a data-act="clear">Don't use</a></div>`);
+  c.dataset.url = p.url;
+  const pHost = modifyHost(c, `${p.brand_id}/${p.id}`);
+  c.querySelector('[data-act=modify]').onclick = () => GraphModify.open(pHost, {
+    base: `/api/brands/${p.brand_id}/products/${p.id}`, backend: () => $('#backend').value,
+    placeholder: 'e.g. add photos of the Olive colour · add the care instructions · add what it is made of · remove the Variant "Natural Black"',
+    onApplied: (j) => { if (j.product) applyProduct(j.product, true); },
+  });
+  const modeSel = c.querySelector('[data-act=logomode]');
+  if (modeSel) modeSel.onchange = async () => {
+    const r = await fetch(`/api/brands/${p.brand_id}/products/${p.id}/settings`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ logo_mode: modeSel.value }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok) applyProduct(j, true); else { alert(j.detail || 'Could not save'); modeSel.value = p.logo_mode || 'brand'; }
+  };
+  c.querySelector('[data-act=check]').onclick = async () => {
+    $('#checkLine').textContent = 'Checking the product page…';
+    const r = await fetch(`/api/brands/${p.brand_id}/products/${p.id}/check`, { method: 'POST' });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { $('#checkLine').textContent = j.detail || 'Check failed'; return; }
+    applyProduct(j, true);
+  };
+  applyIdentity(p);
+  c.querySelector('[data-act=rebuild]').onclick = () => findProduct(true);
+  c.querySelector('[data-act=clear]').onclick = clearProduct;
+}
+
+$('#productFind').addEventListener('click', () => findProduct());
+$('#productQuery').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); findProduct(); } });
+
+function lum(hex) {
+  const h = (hex || '#ffffff').replace('#', '');
+  const [r, g, b] = [0, 2, 4].map((i) => { const c = parseInt(h.slice(i, i + 2), 16) / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+$('#brandFind').addEventListener('click', () => findBrand());
+$('#brandQuery').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); findBrand(); } });
+
+
+// ── audience ──
+const AUDIENCES = [
+  ['Consumer', 'General consumers who may not know the brand yet. Explain the product plainly and lead with the benefit.'],
+  ['New subscribers', 'Just signed up and have not bought yet. Welcoming tone; introduce the brand and its best-known products.'],
+  ['Existing customers', 'Have bought before and know the brand. Skip the basics; focus on what is new and why it is worth it.'],
+  ['Loyal / VIP customers', 'The most engaged repeat buyers. Make them feel like insiders: early access, exclusives, thanks.'],
+  ['Lapsed customers', 'Bought before but not recently. Remind them what they liked and give one clear reason to come back.'],
+  ['Cart abandoners', 'Looked at a product and did not buy. Reassure, answer likely doubts, link straight back to it.'],
+  ['Business buyers (B2B)', 'Professionals evaluating for their company. Practical and specific; lead with outcomes and proof.'],
+];
+const sel = $('#audienceSel');
+AUDIENCES.forEach(([name]) => sel.append(new Option(name, name)));
+sel.append(new Option('Custom…', '__custom'));
+function syncAudience() {
+  const custom = sel.value === '__custom';
+  $('#audienceCustom').hidden = !custom;
+  const preset = AUDIENCES.find(([n]) => n === sel.value);
+  $('#audience').value = custom ? ($('#audienceName').value.trim() || 'Custom audience') : sel.value;
+  $('#audienceDescription').value = custom ? $('#audienceDesc').value.trim() : preset[1];
+  $('#audienceHint').textContent = custom ? 'Describe them in a few words; the planner and copywriter write for this description.' : preset[1];
+}
+sel.addEventListener('change', syncAudience);
+$('#audienceName').addEventListener('input', syncAudience);
+$('#audienceDesc').addEventListener('input', syncAudience);
+syncAudience();
+
+// ── brief: editable, or written/improved from the graphs ──
+let briefBefore = null;
+async function briefAction(mode, template = '') {
+  const box = $('#brief');
+  const btns = [$('#briefWrite'), $('#briefImprove')];
+  btns.forEach((b) => { b.disabled = true; });
+  const note = $('#briefNote');
+  note.style.color = '';
+  note.textContent = mode === 'write' ? 'Writing a brief… (10–40s)' : 'Improving your brief… (10–40s)';
+  try {
+    const r = await fetch('/api/brief', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+      mode, template, text: box.value, audience: $('#audience').value, audience_description: $('#audienceDescription').value,
+      brand_id: $('#brandId').value, product_id: $('#productId').value,
+      uploaded: picked.map((p) => ({ role: p.role, description: p.desc })), backend: $('#backend').value,
+    }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || 'Failed');
+    briefBefore = box.value;
+    box.value = j.brief;
+    $('#briefUndo').hidden = false;
+    const used = [$('#brandId').value && $('#brandQuery').value, $('#productId').value && $('#productQuery').value].filter(Boolean);
+    updateMeter();
+    const unmet = (j.checks || []).filter((c) => !c.ok);
+    const checked = !j.checks ? '' : !unmet.length ? ` All ${j.checks.length} checklist items met.`
+      : ` Still missing: ${unmet.map((c) => `${c.name} (${c.tip})`).join('; ')}.`;
+    note.textContent = `${mode === 'write' ? 'Written' : 'Improved'}${used.length ? ' from ' + used.join(' + ') : ''} for ${$('#audience').value}.${checked} Edit it as you like.`;
+  } catch (err) {
+    note.style.color = 'var(--err)';
+    note.textContent = err.message;
+  } finally {
+    btns.forEach((b) => { b.disabled = false; });
+  }
+}
+$('#briefWrite').addEventListener('click', () => briefAction('write'));
+$('#briefImprove').addEventListener('click', () => briefAction('improve'));
+$('#briefUndo').addEventListener('click', () => {
+  if (briefBefore === null) return;
+  const now = $('#brief').value;
+  $('#brief').value = briefBefore;
+  briefBefore = now;
+  $('#briefUndo').textContent = $('#briefUndo').textContent === 'Undo' ? 'Redo' : 'Undo';
+});
+$('#brief').addEventListener('input', () => { $('#briefUndo').hidden = true; briefBefore = null; $('#briefUndo').textContent = 'Undo'; });
+
+// ── campaign templates, sequences, brief meter ──
+let TEMPLATE_DATA = { templates: [], sequences: [] };
+fetch('/api/brief/templates').then((r) => r.json()).then((d) => {
+  // The writer is checked against these same patterns, so the meter and the writer agree.
+  if (d.checks) { briefChecks = d.checks.map((c) => ({ ...c, re: new RegExp(c.pattern, 'i') })); briefLength = d.length; updateMeter(); }
+  TEMPLATE_DATA = d;
+  d.templates.forEach((t) => $('#template').append(new Option(t.name, t.id)));
+  d.sequences.forEach((q) => $('#emails').append(new Option(`${q.name} sequence (${q.emails.length} emails)`, q.id)));
+  try { const saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); if (saved?.emails) { $('#emails').value = saved.emails; syncEmailsMode(); } } catch (e) { /* no draft */ }
+});
+const TEMPLATE_AUDIENCE = { winback: 'Lapsed customers', welcome: 'New subscribers', cart: 'Cart abandoners', restock: 'Existing customers', collection: 'Existing customers', launch: 'Existing customers' };
+
+$('#template').addEventListener('change', async () => {
+  const id = $('#template').value;
+  const t = TEMPLATE_DATA.templates.find((x) => x.id === id);
+  if (!t) return;
+  if (TEMPLATE_AUDIENCE[id]) { $('#audienceSel').value = TEMPLATE_AUDIENCE[id]; syncAudience(); }
+  if ($('#brandId').value) await briefAction('write', id);  // grounded draft from the graphs
+  else {
+    briefBefore = $('#brief').value;
+    $('#brief').value = `${t.name} email. ${t.layout}`;
+    $('#briefUndo').hidden = false;
+    $('#briefNote').textContent = 'Template inserted. Pick a company and product, then Write it for me, for a version filled with real details.';
+  }
+  updateMeter();
+  saveDraft();
+});
+
+let briefChecks = null; // from /api/brief/templates; the same rules the writer is checked against
+let briefLength = [25, 220];
+function updateMeter() {
+  const b = $('#brief').value;
+  const words = b.trim() ? b.trim().split(/\s+/).length : 0;
+  const checks = [
+    ...(briefChecks ? briefChecks.map((c) => [c.name, c.re.test(b)]) : [
+      ['Purpose', /\b(launch|announce|introduc|remind|welcome|sale|back in stock|restock|new|win|celebrat|invite|thank|season|holiday|why|story)/i.test(b)],
+      ['Layout', /\b(headline|hero|section|paragraph|block|grid|side by side|open (with|on)|then|close)/i.test(b)],
+      ['Images', /\b(image|photo|shot|picture|visual)/i.test(b)],
+      ['CTA label', /(cta|button)[^.]*["“'‘][^"”'’]{2,40}["”'’]|["“][^"”]{2,40}["”][^.]*(cta|button)/i.test(b)],
+    ]),
+    ['Length', words >= briefLength[0] && words <= briefLength[1]],
+    ['Grounded', !!$('#brandId').value],
+  ];
+  const ok = checks.filter(([, v]) => v).length;
+  const tips = { Purpose: 'say what the email is for', Layout: 'describe the order of sections', Images: 'say where images go', 'CTA label': 'give the button an exact label in quotes', Length: words < 25 ? 'add detail (25+ words)' : 'trim it (under ~220 words)', Grounded: 'pick a company so facts come from its graph' };
+  const missing = checks.filter(([, v]) => !v).map(([k]) => k);
+  $('#briefMeter').innerHTML = `<b>Brief ${ok}/${checks.length}</b>` + checks.map(([k, v]) => `<span class="${v ? 'ok' : 'miss'}">${v ? '✓' : '○'} ${k}</span>`).join('')
+    + (missing.length ? `<span style="flex-basis:100%">To improve: ${missing.map((k) => tips[k]).join('; ')}.</span>` : '');
+}
+$('#brief').addEventListener('input', updateMeter);
+
+function syncEmailsMode() {
+  const seq = !!$('#emails').value;
+  $('#drafts').disabled = seq;
+  if (seq) $('#drafts').value = '1';
+  $('#go').textContent = seq ? 'Plan the sequence' : 'Generate email';
+  $('#seqPlan').hidden = true;
+  $('#seqPlan').innerHTML = '';
+}
+$('#emails').addEventListener('change', () => { syncEmailsMode(); saveDraft(); });
+
+async function planSequence() {
+  const kind = $('#emails').value;
+  const box = $('#seqPlan');
+  box.hidden = false;
+  box.innerHTML = '<div class="hint">Writing the briefs for each email… (20–60s)</div>';
+  $('#go').disabled = true;
+  try {
+    const r = await fetch('/api/brief', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+      mode: 'sequence', sequence: kind, text: $('#brief').value, audience: $('#audience').value, audience_description: $('#audienceDescription').value,
+      brand_id: $('#brandId').value, product_id: $('#productId').value, uploaded: picked.map((p) => ({ role: p.role, description: p.desc })), backend: $('#backend').value,
+    }) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || 'Failed');
+    box.innerHTML = '<div class="hint">Edit any of these, then generate them all. They run side by side.</div>';
+    j.emails.forEach((e, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<b></b> <span></span><textarea rows="5"></textarea>`;
+      card.querySelector('b').textContent = `${i + 1}. ${e.name}`;
+      card.querySelector('span').textContent = `send ${e.send}`;
+      card.querySelector('textarea').value = e.brief;
+      card.dataset.name = e.name; card.dataset.send = e.send;
+      box.append(card);
+    });
+    $('#go').textContent = `Generate all ${j.emails.length} emails`;
+  } catch (err) {
+    box.innerHTML = `<div class="hint" style="color:var(--err)">${esc(err.message)}</div>`;
+  } finally {
+    $('#go').disabled = false;
+  }
+}
+
+// ── draft: the form survives a refresh (kept in this browser only) ──
+const DRAFT_KEY = 'emailPipeline.draft.v1';
+const STYLE_FIELDS = ['brand_name', 'tagline', 'background', 'text_color', 'accent', 'accent_text', 'font', 'voice', 'rules'];
+let restoring = true;
+
+function draftNow() {
+  const v = (sel) => document.querySelector(sel)?.value ?? '';
+  return {
+    brief: v('#brief'), audienceSel: v('#audienceSel'), audienceName: v('#audienceName'), audienceDesc: v('#audienceDesc'),
+    backend: v('#backend'), brandId: v('#brandId'), productId: v('#productId'),
+    speed: v('#speed'), drafts: v('#drafts'), factCheck: v('#factCheck'), emails: v('#emails'),
+    style: Object.fromEntries(STYLE_FIELDS.map((f) => [f, v(`[name=${f}]`)])),
+  };
+}
+function saveDraft() {
+  if (restoring) return;
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draftNow())); } catch (e) { /* storage unavailable: nothing to keep */ }
+}
+let saveTimer = null;
+$('#f').addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 300); });
+$('#f').addEventListener('change', saveDraft);
+window.addEventListener('pagehide', saveDraft);  // also catches changes made by buttons (brief writer, brand/product picks)
+
+async function restoreDraft() {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { d = null; }
+  await loadBackends(false, d?.backend || '');
+  if (!d) return;
+  if (d.brandId) {
+    const b = await fetch(`/api/brands/${d.brandId}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    if (b) {
+      applyBrand(b, true);
+      if (d.productId) {
+        const p = await fetch(`/api/brands/${d.brandId}/products/${d.productId}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+        if (p) applyProduct(p, true);
+      }
+    }
+  }
+  // Your own edits win over what the saved graph filled in.
+  for (const [f, val] of Object.entries(d.style || {})) {
+    const el = document.querySelector(`[name=${f}]`);
+    if (!el) continue;
+    el.value = val;
+    const swatch = document.querySelector(`input[type=color][data-for=${f}]`);
+    if (swatch && /^#[0-9a-f]{6}$/i.test(val)) swatch.value = val.toLowerCase();
+  }
+  if (d.audienceSel && [...$('#audienceSel').options].some((o) => o.value === d.audienceSel)) $('#audienceSel').value = d.audienceSel;
+  $('#audienceName').value = d.audienceName || '';
+  $('#audienceDesc').value = d.audienceDesc || '';
+  syncAudience();
+  if (typeof d.brief === 'string') $('#brief').value = d.brief;
+  for (const [id, val] of [['#speed', d.speed], ['#drafts', d.drafts], ['#factCheck', d.factCheck]]) if (val) $(id).value = val;
+}
+
+$('#clearDraft').addEventListener('click', () => {
+  if (!confirm('Clear the form and start over? Saved companies, products and past emails are kept.')) return;
+  restoring = true;
+  try { localStorage.removeItem(DRAFT_KEY); } catch (e) { /* nothing stored */ }
+  location.reload();
+});
+
+restoreDraft().finally(() => { restoring = false; updateMeter(); saveDraft(); });
+loadRuns();
+loadBrands();
+</script>
+</body>
+</html>

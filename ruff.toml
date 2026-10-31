@@ -1,0 +1,9 @@
+# Lint the app (local/) and its tests.
+extend-exclude = ["tools"]
+
+[lint]
+# ruff's default rules: pyflakes plus the core pycodestyle errors. Import sorting stays off on purpose:
+# `import bootstrap` has to run before the generation engine is imported.
+select = ["E4", "E7", "E9", "F"]
+# `l` for a link or a luminance in a one-line comprehension is this codebase's idiom.
+ignore = ["E741"]

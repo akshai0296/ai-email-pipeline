@@ -1,0 +1,7 @@
+# Tests and lint (CI installs only this). The app itself needs local/requirements.txt.
+pytest==9.2.0
+ruff==0.16.8
+# The parts of the app's stack the tested modules import:
+beautifulsoup4==4.15.0
+httpx==0.28.1
+pillow==12.3.0

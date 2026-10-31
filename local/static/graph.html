@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company graph · AI email pipeline</title>
+<style>
+  :root {
+    --bg: #f6f5f2; --panel: #ffffff; --ink: #1b1d21; --muted: #6b6f78; --line: #e3e1dc; --edge: #cfccc5;
+    --accent: #1f4fd1; --code: #f0efeb; --sel: #1f4fd1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111317; --panel: #1a1d22; --ink: #e9eaec; --muted: #9aa0aa; --line: #2b2f36; --edge: #3a3f47;
+      --accent: #7aa2ff; --code: #15181c; --sel: #7aa2ff; }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  header { padding: 14px 20px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  header h1 { font-size: 16px; margin: 0; }
+  header span { color: var(--muted); font-size: 13px; }
+  header a { color: var(--accent); font-size: 13px; }
+  header select { margin-left: auto; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; }
+  main { display: grid; grid-template-columns: 1fr 340px; min-height: calc(100vh - 54px); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .canvas { min-width: 0; padding: 8px; }
+  svg { width: 100%; height: auto; display: block; max-height: calc(100vh - 110px); }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; padding: 4px 12px 10px; font-size: 12px; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  aside { border-left: 1px solid var(--line); padding: 16px 18px; overflow: auto; background: var(--panel); }
+  @media (max-width: 900px) { aside { border-left: 0; border-top: 1px solid var(--line); } }
+  aside h2 { font-size: 15px; margin: 0 0 2px; }
+  aside .type { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+  aside dl { margin: 0; display: grid; grid-template-columns: 96px 1fr; gap: 6px 10px; font-size: 13px; }
+  aside dt { color: var(--muted); }
+  aside dd { margin: 0; word-break: break-word; }
+  aside a { color: var(--accent); }
+  aside .logo { border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: center; border: 1px solid var(--line); }
+  aside .logo img { max-width: 100%; max-height: 80px; }
+  aside .swatch { height: 56px; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 12px; }
+  aside h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 20px 0 8px; }
+  aside ul { margin: 0; padding-left: 16px; font-size: 12px; color: var(--muted); }
+  aside li { margin-bottom: 4px; word-break: break-all; }
+  .node { cursor: pointer; }
+  .tools { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .btn { padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: 600 12px/1.4 inherit; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); }
+  #dropOverlay { position: fixed; inset: 0; z-index: 50; display: flex; gap: 20px; padding: 40px; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(2px); }
+  #dropOverlay[hidden] { display: none; }
+  #dropOverlay .dz { flex: 1; display: grid; place-content: center; gap: 6px; text-align: center; border: 3px dashed var(--line); border-radius: 16px; background: var(--panel); color: var(--muted); font-size: 13px; }
+  #dropOverlay .dz b { color: var(--ink); font-size: 20px; }
+  #dropOverlay .dz.over { border-color: var(--accent); border-style: solid; }
+  #dropOverlay .dz[hidden] { display: none; }
+  .plist { display: grid; gap: 6px; }
+  .plist a { display: flex; gap: 10px; align-items: center; padding: 6px; border: 1px solid var(--line); border-radius: 8px; text-decoration: none; color: var(--ink); }
+  .plist a:hover { border-color: var(--accent); }
+  .plist img, .plist .ph { width: 52px; height: 40px; object-fit: contain; background: #fff; border-radius: 6px; flex: none; }
+  .plist b { display: block; font-size: 13px; }
+  .plist small { color: var(--muted); font-size: 12px; }
+  #toolNote { color: var(--muted); font-size: 12px; }
+  .editor { display: grid; gap: 6px; margin-top: 12px; }
+  .editor label { font-size: 12px; color: var(--muted); }
+  .editor input, .editor textarea, .editor select { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit; }
+  .actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .actions button { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-weight: 600; cursor: pointer; }
+  .actions button.primary { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .actions button.danger { color: #c0392b; }
+  .yours { display: inline-block; font-size: 11px; font-weight: 700; color: var(--accent); margin-left: 6px; }
+  .node:hover .shape, .node.sel .shape { stroke: var(--sel); stroke-width: 2.5; }
+  .edge { stroke: var(--edge); stroke-width: 1.2; }
+  .edge.hl { stroke: var(--sel); stroke-width: 2; }
+  .rel { font-size: 10px; fill: var(--muted); }
+  .lbl { font-size: 12px; fill: var(--ink); }
+  .sub { font-size: 10px; fill: var(--muted); }
+  .group { font-size: 11px; fill: var(--muted); font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .empty { padding: 60px 20px; color: var(--muted); }
+  .empty a { color: var(--accent); }
+  .empty b { color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Company graph</h1>
+  <span id="meta"></span>
+  <a href="/">← Back to the email pipeline</a>
+  <span class="tools">
+    <label class="btn" title="Or drag a logo file onto the page">Upload logo<input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden></label>
+    <label class="btn" id="guideBtn" title="Or drag the PDF onto the page">Upload brand guide (PDF)<input type="file" id="guideFile" accept="application/pdf" hidden></label>
+    <button type="button" class="btn" id="modBtn">Modify…</button>
+    <button type="button" class="btn" id="addBtn">Add a fact</button>
+    <span id="toolNote"></span>
+  </span>
+  <select id="pick" aria-label="Brand" style="margin-left:auto"></select>
+  <select id="pickProduct" aria-label="Product" style="margin-left:0"></select>
+</header>
+<div id="dropOverlay" hidden>
+  <div class="dz" data-kind="logo"><b>Drop here to use as the logo</b>PNG, JPG, WebP or SVG</div>
+  <div class="dz" data-kind="guide" id="guideZone"><b>Drop a brand guide here</b>PDF · its colors, font, voice and rules are read into the graph</div>
+</div>
+<main>
+  <div class="canvas">
+    <svg id="g" viewBox="0 0 1000 760" role="img" aria-label="Company knowledge graph"></svg>
+    <div class="legend" id="legend"></div>
+  </div>
+  <aside id="side"><div class="empty">Click any node to see its details and the page it came from. Double-click a category, product or brand node to open it.</div></aside>
+</main>
+<script src="/static/modify.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const NS = 'http://www.w3.org/2000/svg';
+const TYPES = {
+  Logo: { label: 'Logos', color: '#d4793a' },
+  Color: { label: 'Colors', color: '#9b59b6' },
+  Font: { label: 'Font', color: '#2e8b57' },
+  Voice: { label: 'Voice', color: '#2e8b57' },
+  Rule: { label: 'Style rules', color: '#2e8b57' },
+  Link: { label: 'Links', color: '#2f6fd6' },
+  SocialProfile: { label: 'Social', color: '#2f6fd6' },
+  Address: { label: 'Address', color: '#8a6d3b' },
+  Product: { label: 'Products', color: '#c0392b' },
+  Collection: { label: 'Collections', color: '#b5651d' },
+  ProductImage: { label: 'Photos', color: '#d4793a' },
+  Offer: { label: 'Price', color: '#8a6d3b' },
+  Feature: { label: 'Facts', color: '#2e8b57' },
+  Variant: { label: 'Variants', color: '#9b59b6' },
+  Brand: { label: 'Brand', color: '#2f6fd6' },
+  Topic: { label: 'Branches', color: '#0f8b8d' },
+  Fact: { label: 'Branch facts', color: '#0f8b8d' },
+};
+const ORDER = ['Logo', 'ProductImage', 'Color', 'Font', 'Voice', 'Rule', 'Feature', 'Variant', 'Offer', 'Topic', 'Fact', 'Product', 'Collection', 'Brand', 'Link', 'SocialProfile', 'Address'];
+// Where we are: a brand graph, one of its categories, or a product graph. The URL mirrors it.
+const V = { brand: '', product: '', collection: '' };
+const slug = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function readPath(path = location.pathname) {
+  const [, brand = '', a = '', b = ''] = path.split('/').filter(Boolean).map(decodeURIComponent);
+  return a === 'collection' ? { brand, product: '', collection: b } : { brand, product: a, collection: '' };
+}
+const pathFor = (v) => `/graph/${v.brand}${v.collection ? `/collection/${v.collection}` : v.product ? `/${v.product}` : ''}`;
+const depth = (v) => (v.product ? 2 : v.collection ? 1 : 0);
+const CX = 500, CY = 380;
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+let POS = {}, CUR = { nodes: [], edges: [] };
+const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const el = (name, attrs = {}, parent) => { const e = document.createElementNS(NS, name); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (parent) parent.append(e); return e; };
+const clip = (t, n) => (t.length > n ? t.slice(0, n - 1) + '…' : t);
+
+function nodeLabel(n) {
+  switch (n.type) {
+    case 'Logo': return [n.variant || 'logo', `${n.width}×${n.height} · for ${n.background} bg`];
+    case 'Color': return [n.role.replace('_', ' '), n.hex];
+    case 'Font': return [n.name, 'font'];
+    case 'Voice': return ['Voice', clip(n.text, 30)];
+    case 'Rule': return [clip(n.text, 26), 'rule'];
+    case 'Link': return [n.kind, clip(n.url.replace(/^https?:\/\/(www\.)?/, ''), 28)];
+    case 'SocialProfile': return [n.network, clip(n.url.replace(/^https?:\/\/(www\.)?/, ''), 28)];
+    case 'Address': return ['Address', clip(n.text, 28)];
+    case 'Product': return [clip(n.name, 24), n.featured ? 'featured here · open →' : n.graph ? (n.price ? `${n.price} · open →` : 'product graph →') : clip((n.url || '').replace(/^https?:\/\/(www\.)?[^/]+/, ''), 28)];
+    case 'Collection': return [clip(n.name, 24), n.products ? `${n.products} product${n.products > 1 ? 's' : ''} · open →` : n.role ? `${n.role} · open →` : clip((n.url || '').replace(/^https?:\/\/(www\.)?[^/]+/, ''), 28)];
+    case 'ProductImage': return [n.role, n.description ? clip(n.description, 28) : `${n.width}×${n.height}`];
+    case 'Offer': return [[n.currency, n.price].filter(Boolean).join(' '), n.availability || 'price'];
+    case 'Feature': return [clip(n.text, 26), 'fact'];
+    case 'Variant': return [clip(n.name, 24), n.hex || 'variant'];
+    case 'Brand': return [n.name, 'brand graph →'];
+    case 'Topic': return [clip(n.name, 24), 'branch'];
+    case 'Fact': return [clip(n.text, 26), clip(n.topic || 'fact', 28)];
+    default: return [n.id, n.type];
+  }
+}
+
+function nodeSize(n) {
+  const [main, sub] = nodeLabel(n);
+  const w = Math.max(96, Math.min(190, Math.max(main.length * 7, sub.length * 5.6) + 30));
+  if (n.type === 'Product' && n.image_url) return [Math.max(w, 150), 70];
+  return [w, (n.type === 'Logo' || n.type === 'ProductImage') ? 52 : 38];
+}
+
+// Push overlapping nodes apart while keeping each near its slot on the ring.
+function relax(nodes, pos, cx, cy, centerId) {
+  const pad = 10, W = 1000, H = 760;
+  const items = [{ id: centerId, w: 190, h: 96, fixed: true }, ...nodes.map((n) => { const [w, h] = nodeSize(n); return { id: n.id, w, h }; })];
+  const home = Object.fromEntries(items.map((it) => [it.id, [...pos[it.id]]]));
+  for (let iter = 0; iter < 400; iter++) {
+    let moved = false;
+    for (let i = 0; i < items.length; i++) {
+      for (let j = i + 1; j < items.length; j++) {
+        const a = items[i], b = items[j], pa = pos[a.id], pb = pos[b.id];
+        const ox = (a.w + b.w) / 2 + pad - Math.abs(pa[0] - pb[0]);
+        const oy = (a.h + b.h) / 2 + pad - Math.abs(pa[1] - pb[1]);
+        if (ox <= 0 || oy <= 0) continue;
+        moved = true;
+        const share = a.fixed ? [0, 1] : b.fixed ? [1, 0] : [0.5, 0.5];
+        if (ox < oy) { const d = (pa[0] < pb[0] ? -1 : 1) * ox; pa[0] += d * share[0]; pb[0] -= d * share[1]; }
+        else { const d = (pa[1] < pb[1] ? -1 : 1) * oy; pa[1] += d * share[0]; pb[1] -= d * share[1]; }
+      }
+    }
+    for (const it of items) {
+      if (it.fixed) continue;
+      const p = pos[it.id], h = home[it.id];
+      p[0] += (h[0] - p[0]) * 0.02; p[1] += (h[1] - p[1]) * 0.02;
+      p[0] = Math.min(W - it.w / 2 - 4, Math.max(it.w / 2 + 4, p[0]));
+      p[1] = Math.min(H - it.h / 2 - 4, Math.max(it.h / 2 + 4, p[1]));
+    }
+    if (!moved && iter > 20) break;
+  }
+}
+
+// Graphs are fetched once per visit, so moving back and forth is instant; edits clear the cache.
+const cache = new Map();
+function getJSON(url) {
+  if (!cache.has(url)) cache.set(url, fetch(url).then((r) => { if (!r.ok) throw new Error('Graph not found'); return r.json(); }).catch((e) => { cache.delete(url); throw e; }));
+  return cache.get(url);
+}
+
+// The graph to draw for a view. A category view is cut out of the brand graph: the category in the
+// middle, every product in it around it (with its photo), and the brand to go back up to.
+async function viewData(v) {
+  if (v.product) {
+    const g = await getJSON(`/api/brands/${v.brand}/products/${v.product}/graph`);
+    return { g, center: g.nodes.find((n) => n.id === 'product') || { id: 'product', name: g.url } };
+  }
+  const [bg, list] = await Promise.all([getJSON(`/api/brands/${v.brand}/graph`), getJSON(`/api/brands/${v.brand}/products`).catch(() => [])]);
+  const built = Object.fromEntries(list.map((p) => [`product:${p.id}`, p]));
+  const inside = (cid) => bg.edges.filter((e) => e.from === cid && (e.rel === 'INCLUDES' || e.rel === 'FEATURES'))
+    .sort((a, b) => (a.rel === 'FEATURES') - (b.rel === 'FEATURES'));
+  const product = (n, extra) => ({ ...n, image_url: built[n.id]?.image_url, price: built[n.id]?.price, ...extra });
+  if (!v.collection) {
+    // Products live inside their category (open Phones to see the phones); only products
+    // without a category stay on the brand graph itself.
+    const all = { nodes: bg.nodes.map((n) => (n.type === 'Product' ? product(n) : n.type === 'Collection' ? { ...n, products: inside(n.id).length } : n)), edges: bg.edges };
+    const filed = new Set(bg.edges.filter((e) => e.rel === 'INCLUDES').map((e) => e.to));
+    const g = { ...bg, all, nodes: all.nodes.filter((n) => !filed.has(n.id)), edges: bg.edges.filter((e) => !filed.has(e.to) && !filed.has(e.from)) };
+    return { g, center: g.nodes.find((n) => n.id === 'company') || { id: 'company', name: g.domain } };
+  }
+  const col = bg.nodes.find((n) => n.type === 'Collection' && slug(n.name) === v.collection);
+  if (!col) throw new Error(`There's no “${v.collection}” category in this brand graph.`);
+  const links = inside(col.id);
+  const nodes = [{ ...col, id: 'collection', products: links.length }], edges = [];
+  links.forEach((e) => {
+    const p = bg.nodes.find((n) => n.id === e.to);
+    if (!p) return;
+    nodes.push(product(p, e.rel === 'FEATURES' ? { featured: true } : {}));
+    edges.push({ from: 'collection', rel: e.rel, to: p.id });
+  });
+  const company = bg.nodes.find((n) => n.id === 'company') || {};
+  nodes.push({ id: 'brand', type: 'Brand', name: company.name || bg.domain, brand_id: v.brand, logo_url: bg.nodes.find((n) => n.id === 'logo:primary')?.file_url });
+  edges.push({ from: 'brand', rel: 'HAS_COLLECTION', to: 'collection' });
+  return { g: { domain: bg.domain, url: col.url, updated: bg.updated, sources: [col.url].filter(Boolean), nodes, edges }, center: nodes[0] };
+}
+
+const findCollection = (g, s) => g.nodes.find((n) => n.type === 'Collection' && n.id !== 'collection' && slug(n.name) === s)?.id;
+
+function render({ g, center }, dir, prev = {}) {
+  CUR = g;
+  const kind = V.product ? 'product' : V.collection ? 'category' : 'brand';
+  $('#title').textContent = `${center.name} · ${kind} graph`;
+  document.title = `${center.name} graph`;
+  const where = kind === 'brand' ? g.domain : (g.url || '').replace(/^https?:\/\/(www\.)?/, '');
+  const size = kind === 'category' ? `${center.products} product${center.products === 1 ? '' : 's'}` : `${g.nodes.length} nodes · ${g.edges.length} edges`;
+  $('#meta').textContent = `${where} · ${size} · updated ${String(g.updated || '').replace('T', ' ')}`;
+  const scene = draw(g, center);
+  show(center, g);
+  // Going back up: zoom out of the node we just came from (or, for a product that sits inside a
+  // category, out of that category).
+  const pid = prev.product && `product:${prev.product}`;
+  const home = pid && (g.all || g).edges.find((e) => e.to === pid && e.rel === 'INCLUDES')?.from;
+  const back = pid ? (POS[pid] ? pid : home) : prev.collection ? findCollection(g, prev.collection) : null;
+  enter(scene, dir, back);
+}
+
+// ── transitions ──
+// One zoom: translate(centre) scale(s) translate(-point) puts `point` in the middle at scale s.
+const zoom = (s, [x, y] = [CX, CY]) => `translate(${CX}px,${CY}px) scale(${s}) translate(${-x}px,${-y}px)`;
+const EASE_IN = 'cubic-bezier(.5,0,.75,.15)', EASE_OUT = 'cubic-bezier(.2,.85,.25,1)';
+
+// The current graph leaves: into the clicked node (deeper), shrinking away (up), or fading (sideways).
+function leave(dir, fromId) {
+  const root = $('#root');
+  if (!root || calm.matches || dir === 'none') return Promise.resolve();
+  const frames = dir === 'in' ? [{ transform: zoom(1), opacity: 1 }, { transform: zoom(2.6, POS[fromId]), opacity: 0 }]
+    : dir === 'out' ? [{ transform: zoom(1), opacity: 1 }, { transform: zoom(0.45), opacity: 0 }]
+    : [{ opacity: 1 }, { opacity: 0 }];
+  return root.animate(frames, { duration: dir === 'swap' ? 180 : 340, easing: EASE_IN, fill: 'forwards' }).finished.catch(() => {});
+}
+
+// The new graph arrives: deeper views grow from the middle and fan their nodes out; going up
+// reverses the zoom from the node we came from.
+function enter(s, dir, backId) {
+  if (calm.matches || dir === 'none') return;
+  if (dir === 'out') {
+    s.root.animate([{ transform: zoom(2.6, POS[backId]), opacity: 0 }, { transform: zoom(1), opacity: 1 }], { duration: 480, easing: EASE_OUT });
+    return;
+  }
+  if (dir === 'swap') { s.root.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' }); return; }
+  s.center.animate([{ transform: `translate(${CX}px,${CY}px) scale(.55)`, opacity: 0 }, { transform: `translate(${CX}px,${CY}px) scale(1)`, opacity: 1 }], { duration: 380, easing: EASE_OUT });
+  s.items.forEach(({ g, x, y }, i) => g.animate(
+    [{ transform: `translate(${CX}px,${CY}px) scale(.25)`, opacity: 0 }, { transform: `translate(${x}px,${y}px) scale(1)`, opacity: 1 }],
+    { duration: 560, delay: 80 + Math.min(i * 14, 320), easing: EASE_OUT, fill: 'backwards' }));
+  s.fades.forEach((f) => f.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay: 320, easing: 'ease-out', fill: 'backwards' }));
+}
+
+let navToken = 0;
+async function go(next, { push = true, from } = {}) {
+  next = { brand: '', product: '', collection: '', ...next };
+  const prev = { ...V };
+  if (pathFor(next) === pathFor(prev)) return;
+  const token = ++navToken;
+  const dir = next.brand !== prev.brand ? 'swap' : depth(next) > depth(prev) ? 'in' : depth(next) < depth(prev) ? 'out' : 'swap';
+  // Zoom into the node for the place we're going, when it's on screen.
+  const pid = next.product && `product:${next.product}`;
+  from = from || (pid ? (POS[pid] ? pid : (CUR.all || CUR).edges.find((e) => e.to === pid && e.rel === 'INCLUDES')?.from)
+    : next.collection ? findCollection(CUR, next.collection) : null);
+  const data = viewData(next);
+  const [res] = await Promise.allSettled([data, leave(dir, from)]);
+  if (token !== navToken) return;
+  if (res.status === 'rejected') {
+    $('#root')?.getAnimations().forEach((a) => a.cancel());
+    note(res.reason.message, true);
+    return;
+  }
+  Object.assign(V, next);
+  if (push) history.pushState(null, '', pathFor(V));
+  if (next.brand !== prev.brand) fillPicker(V.brand);
+  syncChrome();
+  render(res.value, dir, prev);
+}
+
+function draw(g, company) {
+  const svg = $('#g');
+  svg.innerHTML = '';
+  const cx = CX, cy = CY;
+  const others = g.nodes.filter((n) => n.id !== company.id);
+  const groups = ORDER.map((t) => [t, others.filter((n) => n.type === t)]).filter(([, ns]) => ns.length);
+  const total = others.length || 1;
+  const root = el('g', { id: 'root' }, svg);
+  const edgeLayer = el('g', {}, root);
+  const labelLayer = el('g', {}, root);
+  const nodeLayer = el('g', {}, root);
+  const items = [];
+  const pos = {};
+  // Each type gets a slice of the circle sized by how many nodes it has, with a gap between slices.
+  const gap = 0.12;
+  const usable = Math.PI * 2 - gap * groups.length;
+  let angle = -Math.PI / 2 - usable * (groups[0]?.[1].length || 0) / total / 2;
+  groups.forEach(([type, ns]) => {
+    const span = usable * ns.length / total;
+    ns.forEach((n, i) => {
+      const a = angle + span * (ns.length === 1 ? 0.5 : i / (ns.length - 1));
+      const r = i % 2 ? 330 : 270;
+      pos[n.id] = [cx + Math.cos(a) * r * 1.3, cy + Math.sin(a) * r * 0.95, a];
+    });
+    const mid = angle + span / 2;
+    const gx = cx + Math.cos(mid) * 150, gy = cy + Math.sin(mid) * 115;
+    el('text', { x: gx, y: gy, 'text-anchor': 'middle', class: 'group' }, labelLayer).textContent = TYPES[type]?.label || type;
+    angle += span + gap;
+  });
+  pos[company.id] = [cx, cy];
+  relax(others, pos, cx, cy, company.id);
+  POS = pos;
+
+  const byNode = {};
+  g.edges.forEach((e) => {
+    if (!pos[e.from] || !pos[e.to]) return;
+    const [x1, y1] = pos[e.from], [x2, y2] = pos[e.to];
+    const line = el('line', { x1, y1, x2, y2, class: 'edge' }, edgeLayer);
+    const title = el('title', {}, line); title.textContent = `${e.from} —${e.rel}→ ${e.to}`;
+    (byNode[e.to] ||= []).push(line);
+    (byNode[e.from] ||= []).push(line);
+  });
+
+  const select = (n, group) => {
+    svg.querySelectorAll('.node.sel').forEach((x) => x.classList.remove('sel'));
+    svg.querySelectorAll('.edge.hl').forEach((x) => x.classList.remove('hl'));
+    group.classList.add('sel');
+    (byNode[n.id] || []).forEach((l) => l.classList.add('hl'));
+    show(n, g);
+  };
+
+  // Center: the company, with its primary logo.
+  const cg = el('g', { class: 'node', transform: `translate(${cx},${cy})`, tabindex: 0 }, nodeLayer);
+  el('rect', { x: -95, y: -48, width: 190, height: 96, rx: 14, class: 'shape', fill: 'var(--panel)', stroke: 'var(--line)', 'stroke-width': 1.5 }, cg);
+  const isCategory = company.type === 'Collection';
+  const primary = isCategory ? null : g.nodes.find((n) => n.id === 'logo:primary') || g.nodes.find((n) => n.type === 'ProductImage');
+  const bgColor = (g.nodes.find((n) => n.id === 'color:background') || {}).hex;
+  if (primary) {
+    const onDark = primary.background === 'dark';
+    el('rect', { x: -85, y: -40, width: 170, height: 52, rx: 8, fill: onDark ? '#111' : (bgColor || '#fff') }, cg);
+    el('image', { href: primary.file_url, x: -75, y: -34, width: 150, height: 40, preserveAspectRatio: 'xMidYMid meet' }, cg);
+  }
+  if (isCategory) {
+    el('text', { x: 0, y: -2, 'text-anchor': 'middle', class: 'lbl', 'font-weight': 700, style: 'font-size:20px' }, cg).textContent = clip(company.name || '', 18);
+    el('text', { x: 0, y: 20, 'text-anchor': 'middle', class: 'sub', style: 'font-size:12px' }, cg).textContent = `category · ${company.products} product${company.products === 1 ? '' : 's'}`;
+    if (!company.products) {
+      el('text', { x: cx, y: cy + 90, 'text-anchor': 'middle', class: 'sub', style: 'font-size:13px' }, labelLayer)
+        .textContent = `No products in ${company.name} yet. Products you build are placed under their category automatically.`;
+    }
+  } else {
+    el('text', { x: 0, y: primary ? 32 : 4, 'text-anchor': 'middle', class: 'lbl', 'font-weight': 700 }, cg).textContent = clip(company.name || '', 24);
+  }
+  cg.onclick = () => select(company, cg);
+
+  others.forEach((n) => {
+    const [x, y] = pos[n.id];
+    const t = TYPES[n.type] || { color: '#888' };
+    const gEl = el('g', { class: 'node', transform: `translate(${x},${y})`, tabindex: 0 }, nodeLayer);
+    items.push({ g: gEl, x, y });
+    const [main, sub] = nodeLabel(n);
+    const w = nodeSize(n)[0];
+    if (n.type === 'Product' && n.image_url) {
+      el('rect', { x: -w / 2, y: -35, width: w, height: 70, rx: 12, class: 'shape', fill: 'var(--panel)', stroke: t.color, 'stroke-width': 1.5 }, gEl);
+      el('rect', { x: -w / 2 + 6, y: -29, width: w - 12, height: 34, rx: 7, fill: '#fff' }, gEl);
+      el('image', { href: n.image_url, x: -w / 2 + 8, y: -28, width: w - 16, height: 32, preserveAspectRatio: 'xMidYMid meet' }, gEl);
+      el('text', { x: 0, y: 18, 'text-anchor': 'middle', class: 'lbl' }, gEl).textContent = main;
+      el('text', { x: 0, y: 30, 'text-anchor': 'middle', class: 'sub' }, gEl).textContent = sub;
+    } else if (n.type === 'Logo' || n.type === 'ProductImage') {
+      el('rect', { x: -w / 2, y: -26, width: w, height: 52, rx: 10, class: 'shape', fill: n.background === 'dark' ? '#16181c' : '#ffffff', stroke: t.color, 'stroke-width': 1.5 }, gEl);
+      el('image', { href: n.file_url, x: -w / 2 + 10, y: -20, width: w - 20, height: 26, preserveAspectRatio: 'xMidYMid meet' }, gEl);
+      el('text', { x: 0, y: 19, 'text-anchor': 'middle', class: 'sub', fill: n.background === 'dark' ? '#aaa' : '#666', style: `fill:${n.background === 'dark' ? '#aaa' : '#666'}` }, gEl).textContent = sub;
+    } else {
+      el('rect', { x: -w / 2, y: -19, width: w, height: 38, rx: 19, class: 'shape', fill: 'var(--panel)', stroke: t.color, 'stroke-width': 1.5 }, gEl);
+      let tx = -w / 2 + 16;
+      if (n.type === 'Color') { el('circle', { cx: -w / 2 + 19, cy: 0, r: 10, fill: n.hex, stroke: 'var(--line)' }, gEl); tx += 16; }
+      else el('circle', { cx: -w / 2 + 12, cy: 0, r: 3.5, fill: t.color }, gEl);
+      el('text', { x: tx, y: -2, class: 'lbl' }, gEl).textContent = main;
+      el('text', { x: tx, y: 11, class: 'sub' }, gEl).textContent = sub;
+    }
+    gEl.onclick = () => select(n, gEl);
+    const target = opens(n);
+    if (target) {
+      gEl.ondblclick = () => go(target, { from: n.id });
+      el('title', {}, gEl).textContent = 'Double-click to open';
+    }
+    gEl.onkeydown = (e) => { if (e.key === 'Enter') (target && e.shiftKey ? go(target, { from: n.id }) : select(n, gEl)); };
+  });
+
+  $('#legend').innerHTML = groups.map(([type, ns]) => `<span><i style="background:${TYPES[type]?.color || '#888'}"></i>${TYPES[type]?.label || type} (${ns.length})</span>`).join('');
+  return { root, center: cg, items, fades: [edgeLayer, labelLayer] };
+}
+
+// The view a node opens on double-click, if any.
+function opens(n) {
+  if (n.type === 'Brand') return { brand: n.brand_id };
+  if (n.type === 'Product' && n.graph) return { brand: V.brand, product: n.id.split(':')[1] };
+  if (n.type === 'Collection' && n.id !== 'collection') return { brand: V.brand, collection: slug(n.name) };
+  return null;
+}
+
+// Product cards for a category's side panel.
+function productList(items) {
+  return `<div class="plist">${items.map(([p, rel]) => {
+    const meta = [p.price, rel === 'FEATURES' ? 'featured' : ''].filter(Boolean).join(' · ') || (p.graph ? 'product graph' : 'no product graph yet');
+    const inner = `${p.image_url ? `<img src="${esc(p.image_url)}" alt="">` : '<span class="ph"></span>'}<span><b>${esc(p.name)}</b><small>${esc(meta)}</small></span>`;
+    return p.graph ? `<a href="${pathFor({ brand: V.brand, product: p.id.split(':')[1] })}" data-go data-from="${esc(p.id)}">${inner}</a>`
+      : `<a href="${esc(p.url || '#')}" target="_blank" rel="noopener">${inner}</a>`;
+  }).join('')}</div>`;
+}
+
+function show(n, g) {
+  const side = $('#side');
+  const hide = new Set(['id', 'type', 'file', 'file_url', 'source', 'image_url', 'products']);
+  let head = '';
+  const link = (v, text) => `<p><a href="${esc(pathFor({ brand: '', product: '', collection: '', ...v }))}" data-go data-from="${esc(n.id)}">${text}</a></p>`;
+  if (n.type === 'Logo') head = `<div class="logo" style="background:${n.background === 'dark' ? '#111' : '#fff'}"><img src="${esc(n.file_url)}" alt="logo"></div>`;
+  if (n.type === 'ProductImage') head = `<div class="logo" style="background:#fff"><img src="${esc(n.file_url)}" alt="${esc(n.description)}" style="max-height:200px"></div>`;
+  if (n.type === 'Color' || (n.type === 'Variant' && n.hex)) head = `<div class="swatch" style="background:${esc(n.hex)}"></div>`;
+  if (n.type === 'Brand') head = `${n.logo_url ? `<div class="logo" style="background:#fff"><img src="${esc(n.logo_url)}" alt="${esc(n.name)} logo"></div>` : ''}${link(opens(n), `Open the ${esc(n.name)} brand graph →`)}`;
+  if (n.type === 'Product' && n.graph) head = `${n.image_url ? `<div class="logo" style="background:#fff"><img src="${esc(n.image_url)}" alt="" style="max-height:160px"></div>` : ''}${link(opens(n), `Open the ${esc(n.name)} product graph →`)}`;
+  if (n.type === 'Collection') {
+    // A category lists its products right here; opening it shows them as a graph.
+    const full = g.all || g;
+    const items = full.edges.filter((e) => e.from === n.id && (e.rel === 'INCLUDES' || e.rel === 'FEATURES'))
+      .map((e) => [full.nodes.find((x) => x.id === e.to), e.rel]).filter(([p]) => p);
+    head = (n.id === 'collection' ? '' : link(opens(n), `Open ${esc(n.name)} →`))
+      + (items.length ? `<h3>Products in ${esc(n.name)}</h3>${productList(items)}`
+        : V.product ? '' : `<p class="type">No products in ${esc(n.name)} yet. Products you build are placed under their category automatically.</p>`);
+  }
+  const rows = Object.entries(n).filter(([k, v]) => !hide.has(k) && v !== '' && v !== null && v !== undefined)
+    .map(([k, v]) => {
+      const val = typeof v === 'string' && /^https?:\/\//.test(v) ? `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>` : esc(typeof v === 'object' ? JSON.stringify(v) : v);
+      return `<dt>${esc(k.replace('_', ' '))}</dt><dd>${val}</dd>`;
+    }).join('');
+  const rels = g.edges.filter((e) => e.from === n.id || e.to === n.id).map((e) => `<li>${esc(e.from)} —${esc(e.rel)}→ ${esc(e.to)}</li>`).join('');
+  const src = n.source ? `<h3>Found on</h3><ul><li><a href="${esc(n.source)}" target="_blank" rel="noopener">${esc(n.source)}</a></li></ul>` : '';
+  const sources = (n.id === 'company' || n.id === 'product') ? `<h3>Pages read to build this graph</h3><ul>${(g.sources || []).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
+    <h3>Searched as</h3><ul>${(g.aliases || []).map((a) => `<li>${esc(a)}</li>`).join('')}</ul>` : '';
+  const editable = V.collection ? null : (V.product ? PRODUCT_FIELDS : BRAND_FIELDS)[n.type];
+  side.innerHTML = `<h2>${esc(n.name || nodeLabel(n)[0])}${n.edited ? '<span class="yours">EDITED BY YOU</span>' : ''}</h2><div class="type">${esc(n.type)} · ${esc(n.id)}</div>${head}<dl>${rows}</dl>
+    ${editable ? `<div class="actions"><button type="button" id="editNode">Edit</button>${['company', 'product', 'brand'].includes(n.id) ? '' : '<button type="button" class="danger" id="deleteNode">Delete</button>'}</div>` : ''}
+    ${src}${rels ? `<h3>Edges</h3><ul>${rels}</ul>` : ''}${sources}`;
+  if (!editable) return;
+  $('#editNode').onclick = () => nodeForm(n.type, n, async (fields) => api('PATCH', `nodes/${encodeURIComponent(n.id)}`, { fields }));
+  const del = $('#deleteNode');
+  if (del) del.onclick = async () => {
+    if (!confirm(n.type === 'Topic' ? `Delete the “${n.name}” branch and every fact under it?` : `Delete this ${n.type}? A rebuild from the website won't bring it back.`)) return;
+    await api('DELETE', `nodes/${encodeURIComponent(n.id)}`);
+    reload();
+  };
+}
+
+// ── editing ──
+// Fields people can set per node type (the server checks them again).
+const BRAND_FIELDS = { Company: ['name', 'legal_name', 'tagline', 'description'], Rule: ['text'], Collection: ['name', 'url'], Link: ['kind', 'url'],
+  SocialProfile: ['network', 'url'], Color: ['role', 'hex'], Font: ['name'], Voice: ['text'], Address: ['text'], Logo: ['background'],
+  Topic: ['name'], Fact: ['topic', 'text'] };
+const PRODUCT_FIELDS = { Product: ['name', 'description', 'category'], Feature: ['text'], Variant: ['name', 'hex'], Offer: ['price', 'currency', 'availability'],
+  Link: ['kind', 'url'], ProductImage: ['role', 'description'], Color: ['role', 'hex'], Font: ['name'], Voice: ['text'], Logo: ['background'],
+  Topic: ['name'], Fact: ['topic', 'text'] };
+const ADDABLE = { brand: ['Rule', 'Collection', 'Link', 'SocialProfile', 'Color', 'Font', 'Voice', 'Address', 'Fact'],
+  product: ['Feature', 'Variant', 'Offer', 'Link', 'Color', 'Font', 'Voice', 'Fact'] };
+const CHOICES = { role: ['background', 'text', 'accent', 'accent_text'], background: ['light', 'dark', 'any'] };
+const LONG = new Set(['text', 'description']);
+const base = () => (V.product ? `/api/brands/${V.brand}/products/${V.product}` : `/api/brands/${V.brand}`);
+
+async function api(method, path, body) {
+  const r = await fetch(`${base()}/${path}`, { method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.detail || `failed (${r.status})`);
+  return j;
+}
+
+function nodeForm(type, node, save) {
+  const fields = (V.product ? PRODUCT_FIELDS : BRAND_FIELDS)[type] || [];
+  const box = document.createElement('div');
+  box.className = 'editor';
+  box.innerHTML = `<h3>${node ? 'Edit' : 'Add'} ${esc(type)}</h3>` + fields.map((f) => {
+    const v = node ? (node[f] ?? '') : '';
+    const input = CHOICES[f] ? `<select data-f="${f}">${CHOICES[f].map((c) => `<option ${c === v ? 'selected' : ''}>${c}</option>`).join('')}</select>`
+      : LONG.has(f) ? `<textarea data-f="${f}" rows="3">${esc(v)}</textarea>`
+      : `<input data-f="${f}" value="${esc(v)}" placeholder="${f === 'hex' ? '#1A1A1A' : f === 'url' ? 'https://' : f === 'topic' ? 'Branch name, e.g. Sustainability (new or existing)' : ''}">`;
+    return `<label>${esc(f.replace('_', ' '))}${input}</label>`;
+  }).join('') + `<div class="actions"><button type="button" class="primary" data-act="save">Save</button><button type="button" data-act="cancel">Cancel</button><span id="formErr" style="color:#c0392b;font-size:12px"></span></div>`;
+  $('#side').append(box);
+  box.querySelector('[data-act=cancel]').onclick = () => box.remove();
+  box.querySelector('[data-act=save]').onclick = async () => {
+    const values = Object.fromEntries([...box.querySelectorAll('[data-f]')].map((el) => [el.dataset.f, el.value]));
+    try { await save(values); reload(); } catch (err) { box.querySelector('#formErr').textContent = err.message; }
+  };
+  box.scrollIntoView({ behavior: 'smooth' });
+}
+
+function addForm() {
+  const kinds = ADDABLE[V.product ? 'product' : 'brand'];
+  $('#side').innerHTML = `<h2>Add a fact</h2><div class="type">It's marked as yours, used in emails, and kept when the graph is rebuilt.</div>
+    <div class="editor"><label>Type<select id="addType">${kinds.map((k) => `<option>${k}</option>`).join('')}</select></label></div>`;
+  const draw = () => { $('#side').querySelectorAll('.editor:not(:first-of-type)').forEach((e) => e.remove()); nodeForm($('#addType').value, null, (fields) => api('POST', 'nodes', { type: $('#addType').value, fields })); };
+  $('#addType').onchange = draw;
+  draw();
+}
+
+// After an edit: fetch again and redraw in place, without a transition.
+function reload() {
+  cache.clear();
+  viewData(V).then((d) => render(d, 'none')).catch(fail);
+  fillPicker(V.brand);
+}
+function note(t, err) { const el = $('#toolNote'); el.textContent = t; el.style.color = err ? '#c0392b' : ''; }
+
+const pickValue = () => (V.collection ? `c:${V.collection}` : V.product ? `p:${V.product}` : '');
+
+// The second menu: the brand graph, its categories, and its product graphs.
+async function fillPicker(brandId) {
+  const [bg, list] = await Promise.all([getJSON(`/api/brands/${brandId}/graph`).catch(() => ({ nodes: [] })), getJSON(`/api/brands/${brandId}/products`).catch(() => [])]);
+  if (brandId !== V.brand) return;
+  const cols = bg.nodes.filter((n) => n.type === 'Collection');
+  const opt = (v, t) => `<option value="${esc(v)}">${esc(t)}</option>`;
+  const pp = $('#pickProduct');
+  pp.innerHTML = opt('', 'Brand graph')
+    + (cols.length ? `<optgroup label="Categories">${cols.map((c) => opt(`c:${slug(c.name)}`, c.name)).join('')}</optgroup>` : '')
+    + (list.length ? `<optgroup label="Products (${list.length})">${list.map((p) => opt(`p:${p.id}`, p.name)).join('')}</optgroup>` : '');
+  pp.value = pickValue();
+}
+
+// Tools and menus that depend on where we are. Brand guides only go on the brand.
+function syncChrome() {
+  $('#pick').value = V.brand;
+  $('#pickProduct').value = pickValue();
+  $('#guideBtn').hidden = !!V.product;
+  $('#guideZone').hidden = !!V.product;
+  note('');
+}
+
+// Links in the side panel move within the page too (cmd/ctrl-click still opens a new tab).
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[data-go]');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault();
+  go(readPath(a.getAttribute('href')), { from: a.dataset.from });
+});
+window.addEventListener('popstate', () => go(readPath(), { push: false }));
+
+(async () => {
+  Object.assign(V, readPath());
+  history.replaceState(null, '', pathFor(V));
+  const pick = $('#pick');
+  pick.onchange = () => go({ brand: pick.value });
+  $('#pickProduct').onchange = (e) => {
+    const [k, v] = [e.target.value.slice(0, 1), e.target.value.slice(2)];
+    go({ brand: V.brand, product: k === 'p' ? v : '', collection: k === 'c' ? v : '' });
+  };
+  viewData(V).then((d) => { syncChrome(); render(d, 'in'); }).catch(notFound);
+  fillPicker(V.brand);
+  const brands = await fetch('/api/brands').then((r) => r.json());
+  brands.forEach((b) => { const o = document.createElement('option'); o.value = b.id; o.textContent = b.name; pick.append(o); });
+  if (!brands.some((b) => b.id === V.brand)) pick.prepend(new Option('Pick a company', V.brand, true, true));
+  pick.value = V.brand;
+  $('#addBtn').onclick = addForm;
+  $('#modBtn').onclick = () => {
+    $('#side').innerHTML = '';
+    GraphModify.open($('#side'), { base: base(), onApplied: () => reload(),
+      placeholder: V.product ? 'e.g. add photos of the Olive colour · add the care instructions · remove the variant “Natural Black”' : undefined });
+  };
+  async function uploadLogo(f) {
+    note('Uploading logo…');
+    const fd = new FormData(); fd.append('file', f, f.name);
+    const r = await fetch(`${base()}/logo`, { method: 'POST', body: fd });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return note(j.detail || 'Upload failed', true);
+    const how = V.product ? " Choose where it appears under “Logo in emails” on the product card." : ' Emails will use it.';
+    note(j.warning ? `⚠ ${j.warning}` : `Logo saved${j.logos.length > 1 ? ' with a reversed version for dark backgrounds' : ''}.${how}`, !!j.warning);
+    reload();
+  }
+  async function uploadGuide(f) {
+    note('Reading the brand guide… (30–90s)');
+    const fd = new FormData(); fd.append('file', f, f.name);
+    const r = await fetch(`${base()}/guide`, { method: 'POST', body: fd });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) return note(j.detail || 'Upload failed', true);
+    for (;;) {
+      const s = await fetch(`/api/brand-jobs/${j.job_id}`).then((x) => x.json());
+      if (s.state === 'done') { note(`From the guide: ${(s.applied || []).join(', ') || 'nothing usable found'}.`); reload(); return; }
+      if (s.state === 'error') return note(s.error, true);
+      await new Promise((res) => setTimeout(res, 2000));
+    }
+  }
+  $('#logoFile').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) uploadLogo(f); };
+  $('#guideFile').onchange = (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) uploadGuide(f); };
+
+  // Drag a file anywhere over the page: two drop zones appear, logo and (on brand pages) brand guide.
+  const overlay = $('#dropOverlay');
+  const isPdf = (f) => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+  const isImage = (f) => ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'].includes(f.type) || /\.(png|jpe?g|webp|svg)$/i.test(f.name);
+  const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
+  let depth = 0;
+  const hideOverlay = () => { depth = 0; overlay.hidden = true; overlay.querySelectorAll('.dz').forEach((z) => z.classList.remove('over')); };
+  window.addEventListener('dragenter', (e) => { if (!hasFiles(e)) return; e.preventDefault(); depth++; overlay.hidden = false; });
+  window.addEventListener('dragleave', () => { if (--depth <= 0) hideOverlay(); });
+  window.addEventListener('dragover', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    overlay.querySelectorAll('.dz').forEach((z) => z.classList.toggle('over', z.contains(e.target)));
+  });
+  window.addEventListener('drop', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    const zone = e.target.closest?.('.dz');
+    hideOverlay();
+    const files = [...e.dataTransfer.files];
+    const f = files[0];
+    if (!f) return;
+    // Dropped on a zone: that kind. Dropped elsewhere: decided by the file type.
+    const kind = zone ? zone.dataset.kind : isPdf(f) ? 'guide' : 'logo';
+    const extra = files.length > 1 ? ` (used ${f.name}; drop one file at a time)` : '';
+    if (kind === 'guide') {
+      if (V.product) return note('Brand guides go on the brand graph: pick “Brand graph” in the menu on the right, then drop it there.', true);
+      if (!isPdf(f)) return note(`A brand guide has to be a PDF; ${f.name} isn't one.`, true);
+      uploadGuide(f).then(() => extra && note($('#toolNote').textContent + extra));
+    } else {
+      if (!isImage(f)) return note(`A logo has to be a PNG, JPG, WebP or SVG image; ${f.name} isn't one.${isPdf(f) && !V.product ? ' Drop a PDF on “brand guide” instead.' : ''}`, true);
+      uploadLogo(f).then(() => extra && note($('#toolNote').textContent + extra));
+    }
+  });
+})();
+function fail(e) { $('#side').innerHTML = `<div class="empty">${esc(e.message)}</div>`; }
+// Nothing saved at this address: say so and point back, instead of an empty canvas with tools that can't work.
+function notFound(e) {
+  $('.tools').hidden = true;
+  $('#pickProduct').hidden = true;
+  $('main').innerHTML = `<div class="empty"><b>${esc(e.message)}.</b> Find the company (or product) on the `
+    + `<a href="/">email pipeline page</a> to build its graph, or pick another company from the menu.</div>`;
+}
+</script>
+</body>
+</html>

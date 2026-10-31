@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "email-pipeline",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": [
+        "local/app.py"
+      ],
+      "port": 8765
+    },
+    {
+      "name": "email-pipeline-test",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": [
+        "EMAIL_LOCAL_PORT=8766",
+        ".venv/bin/python",
+        "local/app.py"
+      ],
+      "port": 8766
+    }
+  ]
+}

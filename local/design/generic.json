@@ -1,0 +1,6801 @@
+{
+ "patterns": [
+  {
+   "id": "header-logo",
+   "name": "Logo Header",
+   "category": "header",
+   "from_sources": [
+    "cerberus:0",
+    "foundation:drip:0"
+   ],
+   "anatomy": [
+    "centered logo image (200x50)"
+   ],
+   "when_to_use": "as the top identifying bar of nearly every marketing email.",
+   "avoid_when": "the brand mark is already embedded in a full-width hero image below it.",
+   "slots": [
+    {
+     "name": "logo_image",
+     "limit": "1 image, ~200x50"
+    },
+    {
+     "name": "alt_text",
+     "limit": "up to 4 words"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "4:1",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-image src=\"{{image}}\" alt=\"[Company logo]\" width=\"200px\" height=\"50px\" align=\"center\" padding=\"0\" />\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "background",
+    "section_padding"
+   ],
+   "thumbnail": "thumbs/header-logo.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Email Header"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/drip.html",
+     "section": "row"
+    }
+   ]
+  },
+  {
+   "id": "nav-menu-header",
+   "name": "Headline + Nav Menu",
+   "category": "header",
+   "from_sources": [
+    "foundation:welcome:0"
+   ],
+   "anatomy": [
+    "centered headline",
+    "horizontal text menu (3-5 links)"
+   ],
+   "when_to_use": "the email functions as a mini landing page and needs quick links to site sections.",
+   "avoid_when": "a simple logo-only header is sufficient and extra links would distract.",
+   "slots": [
+    {
+     "name": "headline",
+     "limit": "up to 6 words"
+    },
+    {
+     "name": "menu_items",
+     "limit": "3-5 items, 1-2 words each"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-text align=\"center\" padding-bottom=\"16px\">\n      <h1 style=\"margin:0;font-family:{{heading_font}};font-size:{{h1_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Headline, up to 6 words]</h1>\n    </mj-text>\n    <mj-text align=\"center\" padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none;font-weight:{{heading_weight}};padding:0 12px;\">[Menu item 1]</a>\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none;font-weight:{{heading_weight}};padding:0 12px;\">[Menu item 2]</a>\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none;font-weight:{{heading_weight}};padding:0 12px;\">[Menu item 3]</a>\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none;font-weight:{{heading_weight}};padding:0 12px;\">[Menu item 4]</a>\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none;font-weight:{{heading_weight}};padding:0 12px;\">[Menu item 5]</a>\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "background",
+    "body_size",
+    "font",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "line_height",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/nav-menu-header.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/welcome.html",
+     "section": "Welcome to Kraken Academy About Course List Campus Map Conta"
+    }
+   ]
+  },
+  {
+   "id": "hero-image-flush",
+   "name": "Hero Image, Flush",
+   "category": "hero",
+   "from_sources": [
+    "cerberus:1"
+   ],
+   "anatomy": [
+    "full-width edge-to-edge image"
+   ],
+   "when_to_use": "you want maximum visual impact immediately with no competing text.",
+   "avoid_when": "a headline or CTA must be visible without scrolling.",
+   "slots": [
+    {
+     "name": "hero_image",
+     "limit": "1 image, 2:1 ratio"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "2:1",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section padding=\"0\" css-class=\"hero-flush-section\">\n  <mj-column padding=\"0\">\n    <mj-image\n      src=\"{{image}}\"\n      alt=\"[Hero image, 2:1 ratio, full width]\"\n      width=\"1360px\"\n      padding=\"0\"\n      border-radius=\"{{image_radius}}\"\n      align=\"center\"\n    />\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "image_radius"
+   ],
+   "thumbnail": "thumbs/hero-image-flush.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Hero Image, Flush"
+    }
+   ]
+  },
+  {
+   "id": "text-block-with-list-and-button",
+   "name": "Text Block + List + Button",
+   "category": "content",
+   "from_sources": [
+    "cerberus:2"
+   ],
+   "anatomy": [
+    "headline (h1/h2)",
+    "body paragraph",
+    "bulleted list",
+    "centered button"
+   ],
+   "when_to_use": "explaining a feature or offer with supporting detail points and driving one action.",
+   "avoid_when": "the content is purely visual or too short to need a list.",
+   "slots": [
+    {
+     "name": "headline",
+     "limit": "up to 8 words"
+    },
+    {
+     "name": "body",
+     "limit": "up to 60 words"
+    },
+    {
+     "name": "list_items",
+     "limit": "2-4 items"
+    },
+    {
+     "name": "button_label",
+     "limit": "up to 4 words"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-text align=\"left\" padding=\"0 {{gutter}} 0 {{gutter}}\" font-family=\"{{font}}\" color=\"{{text}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\">\n      <h2 style=\"margin:0 0 12px 0;font-family:{{heading_font}};font-size:{{h2_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};\">[Headline, up to 8 words]</h2>\n    </mj-text>\n    <mj-text align=\"left\" padding=\"0 {{gutter}} 16px {{gutter}}\" font-family=\"{{font}}\" color=\"{{text}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\">\n      [Body paragraph explaining the feature or offer with supporting detail, up to 60 words placeholder text goes here to describe the value proposition clearly and concisely for the reader.]\n    </mj-text>\n    <mj-text align=\"left\" padding=\"0 {{gutter}} 20px {{gutter}}\" font-family=\"{{font}}\" color=\"{{text}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\">\n      <ul style=\"margin:0;padding:0 0 0 20px;list-style-type:disc;\">\n        <li style=\"margin:0 0 8px 0;\">[List item one, benefit or detail]</li>\n        <li style=\"margin:0 0 8px 0;\">[List item two, benefit or detail]</li>\n        <li style=\"margin:0;\">[List item three, benefit or detail]</li>\n      </ul>\n    </mj-text>\n    <mj-button\n      align=\"center\"\n      href=\"#\"\n      background-color=\"{{accent}}\"\n      color=\"{{accent_text}}\"\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      font-weight=\"{{button_weight}}\"\n      text-transform=\"{{button_case}}\"\n      letter-spacing=\"{{button_letter_spacing}}\"\n      border-radius=\"{{radius}}\"\n      inner-padding=\"{{button_padding}}\"\n      padding=\"0 {{gutter}} {{section_padding}} {{gutter}}\"\n    >\n      [Button label, up to 4 words]\n    </mj-button>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "accent_text",
+    "background",
+    "body_size",
+    "button_case",
+    "button_letter_spacing",
+    "button_padding",
+    "button_weight",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "line_height",
+    "radius",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/text-block-with-list-and-button.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "1 Column Text + Button"
+    }
+   ]
+  },
+  {
+   "id": "highlight-band-centered-text",
+   "name": "Highlight Band, Centered Text",
+   "category": "content",
+   "from_sources": [
+    "cerberus:3",
+    "cerberus:11"
+   ],
+   "anatomy": [
+    "full-bleed color or background-image band",
+    "centered paragraph text"
+   ],
+   "when_to_use": "emphasizing a quote, testimonial, or key statement with strong visual contrast from surrounding sections.",
+   "avoid_when": "the section needs multiple CTAs or dense content.",
+   "slots": [
+    {
+     "name": "body_text",
+     "limit": "up to 40 words"
+    },
+    {
+     "name": "background",
+     "limit": "color or image"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none or wide background",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section full-width=\"full-width\" background-color=\"{{surface}}\" background-url=\"{{image}}\" background-size=\"cover\" background-repeat=\"no-repeat\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\" padding=\"0 {{gutter}}\">\n    <mj-text align=\"center\" color=\"{{text}}\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" padding=\"0\">\n      <p style=\"margin:0;max-width:500px;margin-left:auto;margin-right:auto;\">[Highlight statement, quote, or testimonial — up to 40 words]</p>\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "body_size",
+    "font",
+    "gutter",
+    "line_height",
+    "section_padding",
+    "surface",
+    "text"
+   ],
+   "thumbnail": "thumbs/highlight-band-centered-text.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Background Image with Text"
+    },
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Full Bleed Background Section"
+    }
+   ]
+  },
+  {
+   "id": "two-column-even",
+   "name": "2 Even Columns",
+   "category": "content",
+   "from_sources": [
+    "cerberus:4",
+    "foundation:newsletter-2:2"
+   ],
+   "anatomy": [
+    "column 1: image (optional) + heading + body",
+    "column 2: image (optional) + heading + body"
+   ],
+   "when_to_use": "presenting two parallel, equally-weighted pieces of content side by side.",
+   "avoid_when": "the two items are asymmetric in importance or length.",
+   "slots": [
+    {
+     "name": "heading_each",
+     "limit": "up to 6 words"
+    },
+    {
+     "name": "body_each",
+     "limit": "up to 40 words"
+    },
+    {
+     "name": "image_each",
+     "limit": "optional, 1 image per column"
+    }
+   ],
+   "spec": {
+    "columns": 2,
+    "image_ratio": "1:1 optional",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"50%\" padding=\"{{gutter}}\">\n    <mj-image src=\"{{image}}\" alt=\"[Image for column 1, optional, 1:1 ratio]\" width=\"300px\" border-radius=\"{{image_radius}}\" padding=\"0 0 16px 0\" />\n    <mj-text align=\"left\" padding=\"0 0 8px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Heading, up to 6 words]</h3>\n    </mj-text>\n    <mj-text align=\"left\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      [Body copy for column 1, up to 40 words describing this item in a short, benefit-focused way that fits comfortably in the available space.]\n    </mj-text>\n  </mj-column>\n  <mj-column width=\"50%\" padding=\"{{gutter}}\">\n    <mj-image src=\"{{image}}\" alt=\"[Image for column 2, optional, 1:1 ratio]\" width=\"300px\" border-radius=\"{{image_radius}}\" padding=\"0 0 16px 0\" />\n    <mj-text align=\"left\" padding=\"0 0 8px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Heading, up to 6 words]</h3>\n    </mj-text>\n    <mj-text align=\"left\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      [Body copy for column 2, up to 40 words describing this item in a short, benefit-focused way that fits comfortably in the available space.]\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "background",
+    "body_size",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "image_radius",
+    "line_height",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/two-column-even.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "2 Even Columns"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/newsletter-2.html",
+     "section": "Sub Section Title Lorem ipsum dolor sit amet, consectetur ad"
+    }
+   ]
+  },
+  {
+   "id": "three-column-feature",
+   "name": "3 Column Feature Grid",
+   "category": "content",
+   "from_sources": [
+    "cerberus:5",
+    "foundation:marketing:2"
+   ],
+   "anatomy": [
+    "icon/image",
+    "heading",
+    "short body text",
+    "(repeated x3)"
+   ],
+   "when_to_use": "listing three features, benefits, or product highlights side by side.",
+   "avoid_when": "any item needs more than a short caption's worth of explanation.",
+   "slots": [
+    {
+     "name": "heading_each",
+     "limit": "up to 4 words"
+    },
+    {
+     "name": "body_each",
+     "limit": "up to 20 words"
+    },
+    {
+     "name": "icon_each",
+     "limit": "1 small icon/image"
+    }
+   ],
+   "spec": {
+    "columns": 3,
+    "image_ratio": "1:1",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"33.33%\" padding=\"{{gutter}}\">\n    <mj-image src=\"{{image}}\" alt=\"[Icon for feature one]\" width=\"64px\" padding=\"0 0 16px 0\" border-radius=\"{{image_radius}}\" align=\"center\" />\n    <mj-text align=\"center\" padding=\"0 0 8px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Heading, up to 4 words]</h3>\n    </mj-text>\n    <mj-text align=\"center\" padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" color=\"{{muted}}\" line-height=\"{{line_height}}\">\n      [Body text describing this feature or benefit, up to 20 words]\n    </mj-text>\n  </mj-column>\n\n  <mj-column width=\"33.33%\" padding=\"{{gutter}}\">\n    <mj-image src=\"{{image}}\" alt=\"[Icon for feature two]\" width=\"64px\" padding=\"0 0 16px 0\" border-radius=\"{{image_radius}}\" align=\"center\" />\n    <mj-text align=\"center\" padding=\"0 0 8px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Heading, up to 4 words]</h3>\n    </mj-text>\n    <mj-text align=\"center\" padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" color=\"{{muted}}\" line-height=\"{{line_height}}\">\n      [Body text describing this feature or benefit, up to 20 words]\n    </mj-text>\n  </mj-column>\n\n  <mj-column width=\"33.33%\" padding=\"{{gutter}}\">\n    <mj-image src=\"{{image}}\" alt=\"[Icon for feature three]\" width=\"64px\" padding=\"0 0 16px 0\" border-radius=\"{{image_radius}}\" align=\"center\" />\n    <mj-text align=\"center\" padding=\"0 0 8px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Heading, up to 4 words]</h3>\n    </mj-text>\n    <mj-text align=\"center\" padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" color=\"{{muted}}\" line-height=\"{{line_height}}\">\n      [Body text describing this feature or benefit, up to 20 words]\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "background",
+    "body_size",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "image_radius",
+    "line_height",
+    "muted",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/three-column-feature.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "3 Even Columns"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/marketing.html",
+     "section": "Feature One Lorem ipsum dolor sit amet, consectetur adipisic"
+    }
+   ]
+  },
+  {
+   "id": "image-text-side-by-side",
+   "name": "Thumbnail + Text (Left/Right)",
+   "category": "content",
+   "from_sources": [
+    "cerberus:6",
+    "cerberus:7",
+    "foundation:newsletter-2:1",
+    "foundation:marketing:0"
+   ],
+   "anatomy": [
+    "thumbnail image (left or right)",
+    "heading",
+    "body text",
+    "button (optional)"
+   ],
+   "when_to_use": "pairing a product or feature image with descriptive copy and an optional CTA, alternating sides for rhythm.",
+   "avoid_when": "the content requires more than two columns or equal multi-paragraph weight on both sides.",
+   "slots": [
+    {
+     "name": "heading",
+     "limit": "up to 8 words"
+    },
+    {
+     "name": "body",
+     "limit": "up to 40 words"
+    },
+    {
+     "name": "button_label",
+     "limit": "up to 4 words"
+    },
+    {
+     "name": "image_position",
+     "limit": "left or right"
+    }
+   ],
+   "spec": {
+    "columns": 2,
+    "image_ratio": "1:1 to 4:3",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"40%\" padding=\"0 {{gutter}} 0 0\">\n    <mj-image src=\"{{image}}\" alt=\"[Thumbnail image: product/feature shot, left position]\" width=\"280px\" border-radius=\"{{image_radius}}\" padding=\"0\" />\n  </mj-column>\n  <mj-column width=\"60%\" padding=\"0\">\n    <mj-text padding=\"0 0 8px 0\">\n      <h2 style=\"margin:0;font-family:{{heading_font}};font-size:{{h2_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Heading, up to 8 words]</h2>\n    </mj-text>\n    <mj-text padding=\"0 0 16px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" color=\"{{muted}}\" line-height=\"{{line_height}}\">\n      [Body text describing the feature or product benefit, up to 40 words]\n    </mj-text>\n    <mj-button\n      href=\"#\"\n      background-color=\"{{accent}}\"\n      color=\"{{accent_text}}\"\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      border-radius=\"{{radius}}\"\n      inner-padding=\"{{button_padding}}\"\n      text-transform=\"{{button_case}}\"\n      letter-spacing=\"{{button_letter_spacing}}\"\n      font-weight=\"{{button_weight}}\"\n      align=\"left\"\n    >\n      [Button label, up to 4 words]\n    </mj-button>\n  </mj-column>\n</mj-section>\n\n<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"60%\" padding=\"0 {{gutter}} 0 0\">\n    <mj-text padding=\"0 0 8px 0\">\n      <h2 style=\"margin:0;font-family:{{heading_font}};font-size:{{h2_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Heading, up to 8 words]</h2>\n    </mj-text>\n    <mj-text padding=\"0 0 16px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" color=\"{{muted}}\" line-height=\"{{line_height}}\">\n      [Body text describing the feature or product benefit, up to 40 words]\n    </mj-text>\n    <mj-button\n      href=\"#\"\n      background-color=\"{{accent}}\"\n      color=\"{{accent_text}}\"\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      border-radius=\"{{radius}}\"\n      inner-padding=\"{{button_padding}}\"\n      text-transform=\"{{button_case}}\"\n      letter-spacing=\"{{button_letter_spacing}}\"\n      font-weight=\"{{button_weight}}\"\n      align=\"left\"\n    >\n      [Button label, up to 4 words]\n    </mj-button>\n  </mj-column>\n  <mj-column width=\"40%\" padding=\"0\">\n    <mj-image src=\"{{image}}\" alt=\"[Thumbnail image: product/feature shot, right position]\" width=\"280px\" border-radius=\"{{image_radius}}\" padding=\"0\" />\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "accent_text",
+    "background",
+    "body_size",
+    "button_case",
+    "button_letter_spacing",
+    "button_padding",
+    "button_weight",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "image_radius",
+    "line_height",
+    "muted",
+    "radius",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/image-text-side-by-side.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Thumbnail Left, Text Right"
+    },
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Thumbnail Right, Text Left"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/newsletter-2.html",
+     "section": "This is a title Lorem ipsum dolor sit amet, consectetur adip"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/marketing.html",
+     "section": "Do Something Radical With This App. Sign Up"
+    }
+   ]
+  },
+  {
+   "id": "one-column-text",
+   "name": "Simple Text Paragraph",
+   "category": "content",
+   "from_sources": [
+    "cerberus:9"
+   ],
+   "anatomy": [
+    "single body paragraph"
+   ],
+   "when_to_use": "adding brief filler or transitional copy between visual sections.",
+   "avoid_when": "the content needs a heading, image, or CTA.",
+   "slots": [
+    {
+     "name": "body",
+     "limit": "up to 60 words"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-text\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      line-height=\"{{line_height}}\"\n      color=\"{{text}}\"\n      align=\"left\"\n      padding=\"0 {{gutter}}\"\n    >\n      [Body paragraph, up to 60 words: brief filler or transitional copy between visual sections]\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "background",
+    "body_size",
+    "font",
+    "gutter",
+    "line_height",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/one-column-text.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "1 Column Text"
+    }
+   ]
+  },
+  {
+   "id": "cta-band",
+   "name": "Call-to-Action Band",
+   "category": "cta",
+   "from_sources": [
+    "foundation:drip:3",
+    "foundation:marketing:3",
+    "cerberus:2"
+   ],
+   "anatomy": [
+    "headline",
+    "optional supporting text",
+    "prominent button"
+   ],
+   "when_to_use": "creating a dedicated, high-visibility conversion moment urging a single primary action.",
+   "avoid_when": "multiple competing actions are needed or the section is purely informational.",
+   "slots": [
+    {
+     "name": "headline",
+     "limit": "up to 10 words"
+    },
+    {
+     "name": "body",
+     "limit": "up to 30 words"
+    },
+    {
+     "name": "button_label",
+     "limit": "up to 4 words"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{surface}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-text align=\"center\" padding=\"0 0 12px 0\">\n      <h2 style=\"margin:0;font-family:{{heading_font}};font-size:{{h2_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Headline, up to 10 words]</h2>\n    </mj-text>\n    <mj-text align=\"center\" padding=\"0 0 20px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{muted}}\">\n      [Optional supporting text, up to 30 words, reinforcing the single action you want the reader to take right now]\n    </mj-text>\n    <mj-button\n      href=\"#\"\n      background-color=\"{{accent}}\"\n      color=\"{{accent_text}}\"\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      font-weight=\"{{button_weight}}\"\n      text-transform=\"{{button_case}}\"\n      letter-spacing=\"{{button_letter_spacing}}\"\n      border-radius=\"{{radius}}\"\n      inner-padding=\"{{button_padding}}\"\n      align=\"center\"\n    >\n      [Button label, up to 4 words]\n    </mj-button>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "accent_text",
+    "body_size",
+    "button_case",
+    "button_letter_spacing",
+    "button_padding",
+    "button_weight",
+    "font",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "line_height",
+    "muted",
+    "radius",
+    "section_padding",
+    "surface",
+    "text"
+   ],
+   "thumbnail": "thumbs/cta-band.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/drip.html",
+     "section": "Hey you! It's you! Just a heads up, we just added this hot n"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/marketing.html",
+     "section": "What Are You Waiting For? Get Started Today. Sign Up"
+    },
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "1 Column Text + Button"
+    }
+   ]
+  },
+  {
+   "id": "sidebar-content-layout",
+   "name": "Main Content + Sidebar",
+   "category": "content",
+   "from_sources": [
+    "foundation:sidebar:0",
+    "foundation:sidebar-hero:1"
+   ],
+   "anatomy": [
+    "main column: heading, paragraphs, callout, button",
+    "sidebar column: callout with link list",
+    "sidebar column: social buttons + contact info"
+   ],
+   "when_to_use": "long-form content such as an article paired with supplementary links or contact details.",
+   "avoid_when": "the content is short or single-purpose and doesn't need supplementary material.",
+   "slots": [
+    {
+     "name": "main_heading",
+     "limit": "up to 8 words"
+    },
+    {
+     "name": "main_body",
+     "limit": "2-3 paragraphs"
+    },
+    {
+     "name": "sidebar_links",
+     "limit": "up to 5 links"
+    },
+    {
+     "name": "button_label",
+     "limit": "up to 4 words"
+    }
+   ],
+   "spec": {
+    "columns": 2,
+    "image_ratio": "none",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"60%\">\n    <mj-text padding=\"0 {{gutter}} 16px 0\">\n      <h2 style=\"margin:0;font-family:{{heading_font}};font-size:{{h2_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Main heading, up to 8 words]</h2>\n    </mj-text>\n    <mj-text padding=\"0 {{gutter}} 12px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      [Opening paragraph introducing the topic in two to three sentences, giving the reader enough context to understand why this content matters to them.]\n    </mj-text>\n    <mj-text padding=\"0 {{gutter}} 16px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      [Second paragraph expanding on the idea with a supporting detail, example, or next step the reader should take.]\n    </mj-text>\n    <mj-text container-background-color=\"{{surface}}\" padding=\"16px\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      [Callout highlighting a key takeaway or tip related to the main content.] <a href=\"#\" style=\"color:{{accent}};font-weight:{{heading_weight}}\">[Read more]</a>\n    </mj-text>\n    <mj-text padding=\"16px {{gutter}} 16px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      [Closing paragraph summarizing the content and leading into the call to action below.]\n    </mj-text>\n    <mj-button\n      href=\"#\"\n      background-color=\"{{accent}}\"\n      color=\"{{accent_text}}\"\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      font-weight=\"{{button_weight}}\"\n      text-transform=\"{{button_case}}\"\n      letter-spacing=\"{{button_letter_spacing}}\"\n      border-radius=\"{{radius}}\"\n      inner-padding=\"{{button_padding}}\"\n      align=\"left\"\n    >\n      [Button label, up to 4 words]\n    </mj-button>\n  </mj-column>\n\n  <mj-column width=\"40%\">\n    <mj-text container-background-color=\"{{surface}}\" padding=\"16px\">\n      <h5 style=\"margin:0 0 4px 0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Sidebar header]</h5>\n      <p style=\"margin:0 0 12px 0;font-family:{{font}};font-size:{{small_size}};line-height:{{line_height}};color:{{muted}}\">[Sidebar sub-header]</p>\n      <p style=\"margin:0 0 8px 0\"><a href=\"#\" style=\"color:{{accent}};font-family:{{font}};font-size:{{body_size}}\">[Link one] »</a></p>\n      <p style=\"margin:0 0 8px 0\"><a href=\"#\" style=\"color:{{accent}};font-family:{{font}};font-size:{{body_size}}\">[Link two] »</a></p>\n      <p style=\"margin:0 0 8px 0\"><a href=\"#\" style=\"color:{{accent}};font-family:{{font}};font-size:{{body_size}}\">[Link three] »</a></p>\n      <p style=\"margin:0 0 8px 0\"><a href=\"#\" style=\"color:{{accent}};font-family:{{font}};font-size:{{body_size}}\">[Link four] »</a></p>\n      <p style=\"margin:0\"><a href=\"#\" style=\"color:{{accent}};font-family:{{font}};font-size:{{body_size}}\">[Link five] »</a></p>\n    </mj-text>\n\n    <mj-text container-background-color=\"{{surface}}\" padding=\"16px 16px 8px 16px\">\n      <h6 style=\"margin:0;font-family:{{heading_font}};font-size:{{small_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Connect with us]</h6>\n    </mj-text>\n    <mj-social\n      container-background-color=\"{{surface}}\"\n      padding=\"0 16px 16px 16px\"\n      icon-size=\"28px\"\n      mode=\"horizontal\"\n      align=\"left\"\n      font-family=\"{{font}}\"\n      font-size=\"{{small_size}}\"\n    >\n      <mj-social-element name=\"facebook\" href=\"#\" background-color=\"{{accent}}\" color=\"{{accent_text}}\">[Facebook]</mj-social-element>\n      <mj-social-element name=\"twitter\" href=\"#\" background-color=\"{{accent}}\" color=\"{{accent_text}}\">[Twitter]</mj-social-element>\n      <mj-social-element name=\"linkedin\" href=\"#\" background-color=\"{{accent}}\" color=\"{{accent_text}}\">[LinkedIn]</mj-social-element>\n    </mj-social>\n\n    <mj-text container-background-color=\"{{surface}}\" padding=\"0 16px 16px 16px\" font-family=\"{{font}}\" font-size=\"{{small_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <p style=\"margin:0 0 4px 0\">[Contact info label]</p>\n      <p style=\"margin:0 0 4px 0\">[Phone: 000-000-0000]</p>\n      <p style=\"margin:0\"><a href=\"mailto:contact@example.com\" style=\"color:{{accent}}\">[contact@email.com]</a></p>\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "accent_text",
+    "background",
+    "body_size",
+    "button_case",
+    "button_letter_spacing",
+    "button_padding",
+    "button_weight",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "line_height",
+    "muted",
+    "radius",
+    "section_padding",
+    "small_size",
+    "surface",
+    "text"
+   ],
+   "thumbnail": "thumbs/sidebar-content-layout.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/sidebar.html",
+     "section": "Hello, Han Fastolfe Lorem ipsum dolor sit amet, consectetur "
+    },
+    {
+     "source": "foundation",
+     "file": "templates/sidebar-hero.html",
+     "section": "Hello, Han Fastolfe Lorem ipsum dolor sit amet, consectetur "
+    }
+   ]
+  },
+  {
+   "id": "link-list-columns",
+   "name": "Two-Column Link Lists",
+   "category": "content",
+   "from_sources": [
+    "foundation:newsletter:0"
+   ],
+   "anatomy": [
+    "column 1: heading + bullet link list",
+    "column 2: heading + bullet link list"
+   ],
+   "when_to_use": "presenting categorized resources, related articles, or quick links side by side.",
+   "avoid_when": "only one list is needed or links require accompanying descriptions.",
+   "slots": [
+    {
+     "name": "heading_each",
+     "limit": "up to 4 words"
+    },
+    {
+     "name": "links_each",
+     "limit": "3-5 links"
+    }
+   ],
+   "spec": {
+    "columns": 2,
+    "image_ratio": "none",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"50%\" padding=\"0 {{gutter}} 0 0\">\n    <mj-text padding=\"0 0 12px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Heading, up to 4 words]</h3>\n    </mj-text>\n    <mj-text padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <ul style=\"margin:0;padding:0 0 0 18px;list-style:disc;\">\n        <li style=\"margin:0 0 10px 0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n        <li style=\"margin:0 0 10px 0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n        <li style=\"margin:0 0 10px 0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n        <li style=\"margin:0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n      </ul>\n    </mj-text>\n  </mj-column>\n\n  <mj-column width=\"50%\" padding=\"0 0 0 {{gutter}}\">\n    <mj-text padding=\"0 0 12px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Heading, up to 4 words]</h3>\n    </mj-text>\n    <mj-text padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <ul style=\"margin:0;padding:0 0 0 18px;list-style:disc;\">\n        <li style=\"margin:0 0 10px 0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n        <li style=\"margin:0 0 10px 0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n        <li style=\"margin:0 0 10px 0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n        <li style=\"margin:0;\"><a href=\"#\" style=\"color:{{accent}};text-decoration:underline;\">[Link label, up to 5 words]</a></li>\n      </ul>\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "background",
+    "body_size",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "line_height",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/link-list-columns.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/newsletter.html",
+     "section": "The Insider Lorem ipsum dolor sit amet, consectetur adipisic"
+    }
+   ]
+  },
+  {
+   "id": "social-contact-block",
+   "name": "Connect With Us + Contact Info",
+   "category": "social-proof",
+   "from_sources": [
+    "foundation:basic:1",
+    "foundation:hero:1"
+   ],
+   "anatomy": [
+    "column 1: 'Connect With Us' heading + social link list",
+    "column 2: 'Contact Info' heading + phone/email"
+   ],
+   "when_to_use": "reinforcing social channels and direct contact options, typically above the legal footer.",
+   "avoid_when": "a footer already contains full social icons and contact info.",
+   "slots": [
+    {
+     "name": "social_links",
+     "limit": "2-4 platforms"
+    },
+    {
+     "name": "contact_info",
+     "limit": "phone + email"
+    }
+   ],
+   "spec": {
+    "columns": 2,
+    "image_ratio": "none",
+    "alignment": "left",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{surface}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"50%\" padding=\"0 {{gutter}} 0 0\">\n    <mj-text padding=\"0 0 12px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Connect With Us]</h3>\n    </mj-text>\n    <mj-text padding=\"0 0 6px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none\">[Twitter]</a>\n    </mj-text>\n    <mj-text padding=\"0 0 6px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none\">[Facebook]</a>\n    </mj-text>\n    <mj-text padding=\"0 0 6px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none\">[Instagram]</a>\n    </mj-text>\n    <mj-text padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{text}}\">\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:none\">[LinkedIn]</a>\n    </mj-text>\n  </mj-column>\n  <mj-column width=\"50%\" padding=\"0 0 0 {{gutter}}\">\n    <mj-text padding=\"0 0 12px 0\">\n      <h3 style=\"margin:0;font-family:{{heading_font}};font-size:{{h3_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}}\">[Contact Info]</h3>\n    </mj-text>\n    <mj-text padding=\"0 0 6px 0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{muted}}\">\n      [Phone: 000-000-0000]\n    </mj-text>\n    <mj-text padding=\"0\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" line-height=\"{{line_height}}\" color=\"{{muted}}\">\n      [Email:] <a href=\"mailto:hello@example.com\" style=\"color:{{accent}};text-decoration:none\">[hello@example.com]</a>\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "body_size",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "line_height",
+    "muted",
+    "section_padding",
+    "surface",
+    "text"
+   ],
+   "thumbnail": "thumbs/social-contact-block.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/basic.html",
+     "section": "Connect With Us: Twitter Facebook Google + Contact Info: Pho"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/hero.html",
+     "section": "Connect With Us: Twitter Facebook Google + Contact Info: Pho"
+    }
+   ]
+  },
+  {
+   "id": "footer-legal",
+   "name": "Legal / Compliance Footer",
+   "category": "footer",
+   "from_sources": [
+    "cerberus:10",
+    "foundation:newsletter-2:3"
+   ],
+   "anatomy": [
+    "'view as web page' link",
+    "company name and address",
+    "unsubscribe link"
+   ],
+   "when_to_use": "satisfying required compliance info (CAN-SPAM) at the very bottom of every marketing email.",
+   "avoid_when": "a richer branded footer with social icons already includes this same compliance text.",
+   "slots": [
+    {
+     "name": "company_address",
+     "limit": "1-2 lines"
+    },
+    {
+     "name": "unsubscribe_text",
+     "limit": "1 link"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\" full-width=\"full-width\">\n  <mj-column width=\"100%\">\n    <mj-text align=\"center\" font-family=\"{{font}}\" font-size=\"{{small_size}}\" line-height=\"{{line_height}}\" color=\"{{muted}}\" padding=\"0 20px 8px 20px\">\n      <a href=\"#\" style=\"color:{{accent}}; text-decoration:underline; font-weight:{{heading_weight}};\">[View as web page]</a>\n    </mj-text>\n    <mj-text align=\"center\" font-family=\"{{font}}\" font-size=\"{{small_size}}\" line-height=\"{{line_height}}\" color=\"{{muted}}\" padding=\"0 20px 8px 20px\">\n      [Company Name, up to 1 line]<br />\n      [Street Address, City, State ZIP, Country — up to 1 line]\n    </mj-text>\n    <mj-text align=\"center\" font-family=\"{{font}}\" font-size=\"{{small_size}}\" line-height=\"{{line_height}}\" color=\"{{muted}}\" padding=\"0 20px 0 20px\">\n      [You're receiving this email because you subscribed.]\n      <a href=\"#\" style=\"color:{{accent}}; text-decoration:underline;\">[Unsubscribe]</a>\n    </mj-text>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "background",
+    "font",
+    "heading_weight",
+    "line_height",
+    "muted",
+    "section_padding",
+    "small_size"
+   ],
+   "thumbnail": "thumbs/footer-legal.png",
+   "sources": [
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Email Footer"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/newsletter-2.html",
+     "section": "You received this email because you're signed up to receive "
+    }
+   ]
+  },
+  {
+   "id": "footer-social-icons",
+   "name": "Footer with Social Icons",
+   "category": "footer",
+   "from_sources": [
+    "foundation:drip:4",
+    "foundation:marketing:4"
+   ],
+   "anatomy": [
+    "copyright + contact email",
+    "manage preferences / unsubscribe links",
+    "row of social icon links"
+   ],
+   "when_to_use": "closing the email with brand sign-off plus visual social media promotion.",
+   "avoid_when": "a minimal text-only footer is preferred or social promotion is handled elsewhere.",
+   "slots": [
+    {
+     "name": "copyright_text",
+     "limit": "1 line"
+    },
+    {
+     "name": "social_icons",
+     "limit": "3-5 icons"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "none",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{surface}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-text align=\"center\" color=\"{{muted}}\" font-family=\"{{font}}\" font-size=\"{{small_size}}\" line-height=\"{{line_height}}\" padding-bottom=\"4px\">\n      [© 2026 Brand Name, Inc. All rights reserved.]\n    </mj-text>\n    <mj-text align=\"center\" color=\"{{muted}}\" font-family=\"{{font}}\" font-size=\"{{small_size}}\" line-height=\"{{line_height}}\" padding-top=\"0\" padding-bottom=\"12px\">\n      <a href=\"mailto:hello@brand.com\" style=\"color:{{accent}};text-decoration:underline\">[hello@brand.com]</a>\n      &nbsp;|&nbsp;\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:underline\">[Manage preferences]</a>\n      &nbsp;|&nbsp;\n      <a href=\"#\" style=\"color:{{accent}};text-decoration:underline\">[Unsubscribe]</a>\n    </mj-text>\n    <mj-social font-family=\"{{font}}\" icon-size=\"24px\" mode=\"horizontal\" align=\"center\" padding=\"0\">\n      <mj-social-element name=\"facebook\" href=\"#\" src=\"{{image}}\" alt=\"[Facebook icon link]\" background-color=\"{{accent}}\" border-radius=\"{{radius}}\">\n      </mj-social-element>\n      <mj-social-element name=\"instagram\" href=\"#\" src=\"{{image}}\" alt=\"[Instagram icon link]\" background-color=\"{{accent}}\" border-radius=\"{{radius}}\">\n      </mj-social-element>\n      <mj-social-element name=\"x-twitter\" href=\"#\" src=\"{{image}}\" alt=\"[Twitter/X icon link]\" background-color=\"{{accent}}\" border-radius=\"{{radius}}\">\n      </mj-social-element>\n      <mj-social-element name=\"linkedin\" href=\"#\" src=\"{{image}}\" alt=\"[LinkedIn icon link]\" background-color=\"{{accent}}\" border-radius=\"{{radius}}\">\n      </mj-social-element>\n    </mj-social>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "font",
+    "line_height",
+    "muted",
+    "radius",
+    "section_padding",
+    "small_size",
+    "surface"
+   ],
+   "thumbnail": "thumbs/footer-social-icons.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/drip.html",
+     "section": "@copywrite nobody hello@nocopywrite.com | Manage Email Notif"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/marketing.html",
+     "section": "@copywrite nobody hello@nocopywrite.com | Manage Email Notif"
+    }
+   ]
+  },
+  {
+   "id": "hero-headline-image-cta",
+   "name": "Hero Headline with Image and CTA",
+   "category": "hero",
+   "from_sources": [
+    "foundation:hero:0",
+    "foundation:marketing:0",
+    "foundation:sidebar-hero:0",
+    "cerberus:1"
+   ],
+   "anatomy": [
+    "headline (h1)",
+    "one-line supporting text",
+    "full-width product image (2:1)",
+    "button"
+   ],
+   "when_to_use": "Use at the top of a marketing email to introduce a single product or offer with a strong visual and one primary action.",
+   "avoid_when": "Avoid when you need to showcase multiple products or messages in one section, or for purely transactional content.",
+   "slots": [
+    {
+     "name": "headline",
+     "limit": "up to 8 words"
+    },
+    {
+     "name": "subtext",
+     "limit": "one line, up to 15 words"
+    },
+    {
+     "name": "image",
+     "limit": "1 full-width product image"
+    },
+    {
+     "name": "button",
+     "limit": "1 button, up to 3 words"
+    }
+   ],
+   "spec": {
+    "columns": 1,
+    "image_ratio": "2:1",
+    "alignment": "center",
+    "stacks_on_mobile": true
+   },
+   "mjml": "<mj-section background-color=\"{{background}}\" padding=\"{{section_padding}}\">\n  <mj-column width=\"100%\">\n    <mj-text align=\"center\" padding=\"0 {{gutter}} 8px {{gutter}}\">\n      <h1 style=\"margin:0;font-family:{{heading_font}};font-size:{{h1_size}};font-weight:{{heading_weight}};text-transform:{{heading_case}};letter-spacing:{{heading_letter_spacing}};color:{{text}};line-height:{{line_height}}\">[Headline, up to 8 words]</h1>\n    </mj-text>\n    <mj-text align=\"center\" padding=\"0 {{gutter}} 16px {{gutter}}\" font-family=\"{{font}}\" font-size=\"{{body_size}}\" color=\"{{muted}}\" line-height=\"{{line_height}}\">\n      [One-line supporting text, up to 15 words]\n    </mj-text>\n    <mj-image src=\"{{image}}\" alt=\"[Full-width product image]\" width=\"600px\" border-radius=\"{{image_radius}}\" padding=\"0 {{gutter}} 24px {{gutter}}\" />\n    <mj-button\n      href=\"#\"\n      background-color=\"{{accent}}\"\n      color=\"{{accent_text}}\"\n      font-family=\"{{font}}\"\n      font-size=\"{{body_size}}\"\n      font-weight=\"{{button_weight}}\"\n      text-transform=\"{{button_case}}\"\n      letter-spacing=\"{{button_letter_spacing}}\"\n      border-radius=\"{{radius}}\"\n      inner-padding=\"{{button_padding}}\"\n      padding=\"0 {{gutter}} 0 {{gutter}}\"\n    >\n      [CTA, up to 3 words]\n    </mj-button>\n  </mj-column>\n</mj-section>",
+   "tokens": [
+    "accent",
+    "accent_text",
+    "background",
+    "body_size",
+    "button_case",
+    "button_letter_spacing",
+    "button_padding",
+    "button_weight",
+    "font",
+    "gutter",
+    "heading_case",
+    "heading_font",
+    "heading_letter_spacing",
+    "heading_weight",
+    "image_radius",
+    "line_height",
+    "muted",
+    "radius",
+    "section_padding",
+    "text"
+   ],
+   "thumbnail": "thumbs/hero-headline-image-cta.png",
+   "sources": [
+    {
+     "source": "foundation",
+     "file": "templates/hero.html",
+     "section": "Hi, Elijah Baily Lorem ipsum dolor sit amet, consectetur adi"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/marketing.html",
+     "section": "Do Something Radical With This App. Sign Up"
+    },
+    {
+     "source": "foundation",
+     "file": "templates/sidebar-hero.html",
+     "section": "Hi, Elijah Baily Lorem ipsum dolor sit amet, consectetur adi"
+    },
+    {
+     "source": "cerberus",
+     "file": "cerberus-hybrid.html",
+     "section": "Hero Image, Flush"
+    }
+   ]
+  }
+ ],
+ "recipes": [
+  {
+   "id": "launch",
+   "name": "Product launch",
+   "sequence": [
+    "header-logo",
+    "hero-image-flush",
+    "text-block-with-list-and-button",
+    "image-text-side-by-side",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "highlight-band-centered-text",
+    "social-contact-block",
+    "footer-social-icons",
+    "hero-headline-image-cta"
+   ],
+   "notes": "Lead with the hero shot for impact, explain the new thing with key facts, show a detail photo, then drive to one CTA before closing."
+  },
+  {
+   "id": "restock",
+   "name": "Back in stock",
+   "sequence": [
+    "header-logo",
+    "hero-image-flush",
+    "highlight-band-centered-text",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "text-block-with-list-and-button",
+    "social-contact-block",
+    "footer-social-icons",
+    "hero-headline-image-cta"
+   ],
+   "notes": "The hero shot confirms it's back, the centered band delivers the emotional 'why people love it' punch, then one CTA closes fast since the message is simple."
+  },
+  {
+   "id": "winback",
+   "name": "Win-back",
+   "sequence": [
+    "header-logo",
+    "text-block-with-list-and-button",
+    "highlight-band-centered-text",
+    "image-text-side-by-side",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "social-contact-block",
+    "footer-social-icons"
+   ],
+   "notes": "Opens with a personal text headline and reminder, uses a highlighted band for the compelling reason to return, then grounds it with a product shot before the CTA."
+  },
+  {
+   "id": "seasonal",
+   "name": "Seasonal / holiday",
+   "sequence": [
+    "header-logo",
+    "hero-image-flush",
+    "text-block-with-list-and-button",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "highlight-band-centered-text",
+    "footer-social-icons",
+    "hero-headline-image-cta"
+   ],
+   "notes": "A strong seasonal hero image sets mood, short copy ties it to the occasion, and a single CTA band keeps focus even if an offer is added."
+  },
+  {
+   "id": "welcome",
+   "name": "Welcome",
+   "sequence": [
+    "header-logo",
+    "text-block-with-list-and-button",
+    "three-column-feature",
+    "image-text-side-by-side",
+    "cta-band",
+    "social-contact-block",
+    "footer-legal"
+   ],
+   "optional": [
+    "footer-social-icons"
+   ],
+   "notes": "Story-first text block welcomes and introduces the brand, three columns highlight differentiators, then a bestseller photo and CTA convert the goodwill into a shop action."
+  },
+  {
+   "id": "collection",
+   "name": "New collection",
+   "sequence": [
+    "header-logo",
+    "hero-image-flush",
+    "two-column-even",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "nav-menu-header",
+    "footer-social-icons",
+    "hero-headline-image-cta"
+   ],
+   "notes": "Hero establishes the collection visually, two even columns showcase paired products with captions, and one CTA sends everyone to the full collection."
+  },
+  {
+   "id": "spotlight",
+   "name": "Product spotlight",
+   "sequence": [
+    "header-logo",
+    "hero-image-flush",
+    "three-column-feature",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "text-block-with-list-and-button",
+    "footer-social-icons",
+    "hero-headline-image-cta"
+   ],
+   "notes": "The hero shot anchors the single product, three feature blocks each pair a fact with a photo, and the CTA band closes with one clear action."
+  },
+  {
+   "id": "cart",
+   "name": "Cart reminder",
+   "sequence": [
+    "header-logo",
+    "image-text-side-by-side",
+    "highlight-band-centered-text",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "social-contact-block",
+    "footer-social-icons"
+   ],
+   "notes": "The product photo with name/price reminds them what they left, the highlighted band reassures with shipping/care points, then the CTA nudges completion."
+  },
+  {
+   "id": "newsletter",
+   "name": "Newsletter",
+   "sequence": [
+    "header-logo",
+    "nav-menu-header",
+    "one-column-text",
+    "sidebar-content-layout",
+    "link-list-columns",
+    "social-contact-block",
+    "footer-legal"
+   ],
+   "optional": [
+    "highlight-band-centered-text",
+    "footer-social-icons"
+   ],
+   "notes": "Nav header sets it up as a mini landing page, intro text transitions into the main article with sidebar links, then categorized resources and social links close it out."
+  },
+  {
+   "id": "announcement",
+   "name": "Announcement",
+   "sequence": [
+    "header-logo",
+    "hero-image-flush",
+    "text-block-with-list-and-button",
+    "cta-band",
+    "footer-legal"
+   ],
+   "optional": [
+    "nav-menu-header",
+    "highlight-band-centered-text",
+    "footer-social-icons",
+    "hero-headline-image-cta"
+   ],
+   "notes": "A bold hero image grabs attention for the news, supporting text explains the details, and a single CTA band drives the one key action."
+  }
+ ],
+ "constraints": [
+  {
+   "id": "css-accent-color",
+   "title": "accent-color",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])accent\\-color\\s*:",
+   "url": "https://www.caniemail.com/features/css-accent-color/",
+   "tested": "2023-12-19"
+  },
+  {
+   "id": "css-align-items",
+   "title": "align-items",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])align\\-items\\s*:",
+   "url": "https://www.caniemail.com/features/css-align-items/",
+   "tested": "2023-12-19"
+  },
+  {
+   "id": "css-animation",
+   "title": "animation",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])animation\\s*:",
+   "url": "https://www.caniemail.com/features/css-animation/",
+   "tested": "2026-04-07"
+  },
+  {
+   "id": "css-aspect-ratio",
+   "title": "aspect-ratio",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])aspect\\-ratio\\s*:",
+   "url": "https://www.caniemail.com/features/css-aspect-ratio/",
+   "tested": "2023-12-19"
+  },
+  {
+   "id": "css-at-font-face",
+   "title": "@font-face",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.38,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "@font-face",
+   "url": "https://www.caniemail.com/features/css-at-font-face/",
+   "tested": "2023-12-19"
+  },
+  {
+   "id": "css-at-import",
+   "title": "@import",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-import/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-at-keyframes",
+   "title": "@keyframes",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-keyframes/",
+   "tested": "2021-05-25"
+  },
+  {
+   "id": "css-at-media-device-pixel-ratio",
+   "title": "@media (-webkit-device-pixel-ratio)",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-media-device-pixel-ratio/",
+   "tested": "2019-08-20"
+  },
+  {
+   "id": "css-at-media-hover",
+   "title": "@media (hover), @media (any-hover)",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-media-hover/",
+   "tested": "2022-08-29"
+  },
+  {
+   "id": "css-at-media-orientation",
+   "title": "@media (orientation)",
+   "category": "css",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Gmail iPhone",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-media-orientation/",
+   "tested": "2019-08-20"
+  },
+  {
+   "id": "css-at-media-prefers-color-scheme",
+   "title": "@media (prefers-color-scheme)",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-media-prefers-color-scheme/",
+   "tested": "2023-03-08"
+  },
+  {
+   "id": "css-at-media-prefers-reduced-motion",
+   "title": "@media (prefers-reduced-motion)",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-media-prefers-reduced-motion/",
+   "tested": "2021-02-20"
+  },
+  {
+   "id": "css-at-media",
+   "title": "@media",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "detect": "@media\\b",
+   "url": "https://www.caniemail.com/features/css-at-media/",
+   "tested": "2023-12-13"
+  },
+  {
+   "id": "css-at-supports",
+   "title": "@supports",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-at-supports/",
+   "tested": "2020-05-25"
+  },
+  {
+   "id": "css-backdrop-filter",
+   "title": "backdrop-filter",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])backdrop\\-filter\\s*:",
+   "url": "https://www.caniemail.com/features/css-backdrop-filter/",
+   "tested": "2024-01-17"
+  },
+  {
+   "id": "css-background-blend-mode",
+   "title": "background-blend-mode",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])background\\-blend\\-mode\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-blend-mode/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background-clip",
+   "title": "background-clip",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])background\\-clip\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-clip/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background-color",
+   "title": "background-color",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "(?<![a-z-])background\\-color\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-color/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background-image",
+   "title": "background-image",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])background\\-image\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-image/",
+   "tested": "2023-07-24"
+  },
+  {
+   "id": "css-background-origin",
+   "title": "background-origin",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])background\\-origin\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-origin/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background-position",
+   "title": "background-position",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])background\\-position\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-position/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background-repeat",
+   "title": "background-repeat",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])background\\-repeat\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-repeat/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background-size",
+   "title": "background-size",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])background\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-background-size/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-background",
+   "title": "background",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])background\\s*:",
+   "url": "https://www.caniemail.com/features/css-background/",
+   "tested": "2023-07-24"
+  },
+  {
+   "id": "css-block-inline-size",
+   "title": "block-size & inline-size",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-block-inline-size/",
+   "tested": "2022-07-14"
+  },
+  {
+   "id": "css-border-collapse",
+   "title": "border-collapse",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "(?<![a-z-])border\\-collapse\\s*:",
+   "url": "https://www.caniemail.com/features/css-border-collapse/",
+   "tested": "2023-12-20"
+  },
+  {
+   "id": "css-border-image",
+   "title": "border-image",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])border\\-image\\s*:",
+   "url": "https://www.caniemail.com/features/css-border-image/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-border-inline-block-individual",
+   "title": "border-inline & border-block individual logical properties",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Outlook Mac",
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-border-inline-block-individual/",
+   "tested": "2022-07-14"
+  },
+  {
+   "id": "css-border-inline-block-longhand",
+   "title": "border-inline & border-block longhand properties",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-border-inline-block-longhand/",
+   "tested": "2022-07-14"
+  },
+  {
+   "id": "css-border-inline-block",
+   "title": "border-inline & border-block",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-border-inline-block/",
+   "tested": "2022-07-13"
+  },
+  {
+   "id": "css-border-radius-logical",
+   "title": "border-radius logical properties",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-border-radius-logical/",
+   "tested": "2022-08-16"
+  },
+  {
+   "id": "css-border-radius",
+   "title": "border-radius",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])border\\-radius\\s*:",
+   "url": "https://www.caniemail.com/features/css-border-radius/",
+   "tested": "2021-03-09"
+  },
+  {
+   "id": "css-border-spacing",
+   "title": "border-spacing",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])border\\-spacing\\s*:",
+   "url": "https://www.caniemail.com/features/css-border-spacing/",
+   "tested": "2023-12-20"
+  },
+  {
+   "id": "css-border",
+   "title": "border",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])border\\s*:",
+   "url": "https://www.caniemail.com/features/css-border/",
+   "tested": "2021-07-22"
+  },
+  {
+   "id": "css-box-shadow",
+   "title": "box-shadow",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])box\\-shadow\\s*:",
+   "url": "https://www.caniemail.com/features/css-box-shadow/",
+   "tested": "2023-12-20"
+  },
+  {
+   "id": "css-box-sizing",
+   "title": "box-sizing",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])box\\-sizing\\s*:",
+   "url": "https://www.caniemail.com/features/css-box-sizing/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-caption-side",
+   "title": "caption-side",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])caption\\-side\\s*:",
+   "url": "https://www.caniemail.com/features/css-caption-side/",
+   "tested": "2021-05-13"
+  },
+  {
+   "id": "css-clear",
+   "title": "clear",
+   "category": "css",
+   "level": "partial",
+   "support": 0.77,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Outlook Android",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])clear\\s*:",
+   "url": "https://www.caniemail.com/features/css-clear/",
+   "tested": "2024-09-06"
+  },
+  {
+   "id": "css-clip-path",
+   "title": "clip-path",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])clip\\-path\\s*:",
+   "url": "https://www.caniemail.com/features/css-clip-path/",
+   "tested": "2021-03-09"
+  },
+  {
+   "id": "css-color-scheme",
+   "title": "color-scheme CSS property",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-color-scheme/",
+   "tested": "2023-09-18"
+  },
+  {
+   "id": "css-column-count",
+   "title": "column-count",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])column\\-count\\s*:",
+   "url": "https://www.caniemail.com/features/css-column-count/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-column-layout-properties",
+   "title": "css column properties",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-column-layout-properties/",
+   "tested": "2022-08-02"
+  },
+  {
+   "id": "css-comments",
+   "title": "CSS comments",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-comments/",
+   "tested": "2024-04-25"
+  },
+  {
+   "id": "css-conic-gradient",
+   "title": "conic-gradient()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.29,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Samsung Email"
+   ],
+   "detect": "conic\\-gradient\\(",
+   "url": "https://www.caniemail.com/features/css-conic-gradient/",
+   "tested": "2023-01-02"
+  },
+  {
+   "id": "css-cursor",
+   "title": "cursor",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.1,
+   "unsupported": [
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])cursor\\s*:",
+   "url": "https://www.caniemail.com/features/css-cursor/",
+   "tested": "2025-07-02"
+  },
+  {
+   "id": "css-direction",
+   "title": "direction",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "(?<![a-z-])direction\\s*:",
+   "url": "https://www.caniemail.com/features/css-direction/",
+   "tested": "2021-10-05"
+  },
+  {
+   "id": "css-display-flex",
+   "title": "display:flex",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "display\\s*:\\s*flex\\b",
+   "url": "https://www.caniemail.com/features/css-display-flex/",
+   "tested": "2021-11-02"
+  },
+  {
+   "id": "css-display-grid",
+   "title": "display:grid",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "display\\s*:\\s*grid\\b",
+   "url": "https://www.caniemail.com/features/css-display-grid/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-display-none",
+   "title": "display:none",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "display\\s*:\\s*none\\b",
+   "url": "https://www.caniemail.com/features/css-display-none/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-display",
+   "title": "display",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])display\\s*:",
+   "url": "https://www.caniemail.com/features/css-display/",
+   "tested": "2021-12-01"
+  },
+  {
+   "id": "css-empty-cells",
+   "title": "empty-cells",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])empty\\-cells\\s*:",
+   "url": "https://www.caniemail.com/features/css-empty-cells/",
+   "tested": "2024-08-23"
+  },
+  {
+   "id": "css-filter",
+   "title": "filter",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])filter\\s*:",
+   "url": "https://www.caniemail.com/features/css-filter/",
+   "tested": "2024-01-03"
+  },
+  {
+   "id": "css-flex-direction",
+   "title": "flex-direction:column",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "flex\\-direction\\s*:\\s*column\\b",
+   "url": "https://www.caniemail.com/features/css-flex-direction/",
+   "tested": "2023-01-17"
+  },
+  {
+   "id": "css-flex-wrap",
+   "title": "flex-wrap: wrap",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "flex\\-wrap\\s*:\\s*wrap\\b",
+   "url": "https://www.caniemail.com/features/css-flex-wrap/",
+   "tested": "2023-01-16"
+  },
+  {
+   "id": "css-float",
+   "title": "float",
+   "category": "css",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])float\\s*:",
+   "url": "https://www.caniemail.com/features/css-float/",
+   "tested": "2024-05-08"
+  },
+  {
+   "id": "css-font-kerning",
+   "title": "font-kerning",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])font\\-kerning\\s*:",
+   "url": "https://www.caniemail.com/features/css-font-kerning/",
+   "tested": "2022-08-01"
+  },
+  {
+   "id": "css-font-size-adjust",
+   "title": "font-size-adjust",
+   "category": "css",
+   "level": "partial",
+   "support": 0.77,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])font\\-size\\-adjust\\s*:",
+   "url": "https://www.caniemail.com/features/css-font-size-adjust/",
+   "tested": "2026-04-16"
+  },
+  {
+   "id": "css-font-size",
+   "title": "font-size",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])font\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-font-size/",
+   "tested": "2024-02-28"
+  },
+  {
+   "id": "css-font-stretch",
+   "title": "font-stretch",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Outlook Android",
+    "Outlook Windows",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])font\\-stretch\\s*:",
+   "url": "https://www.caniemail.com/features/css-font-stretch/",
+   "tested": "2023-09-23"
+  },
+  {
+   "id": "css-font-weight",
+   "title": "font-weight",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])font\\-weight\\s*:",
+   "url": "https://www.caniemail.com/features/css-font-weight/",
+   "tested": "2022-06-23"
+  },
+  {
+   "id": "css-font",
+   "title": "font shorthand",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-font/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-function-clamp",
+   "title": "clamp()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.38,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Samsung Email"
+   ],
+   "detect": "clamp\\(",
+   "url": "https://www.caniemail.com/features/css-function-clamp/",
+   "tested": "2021-05-07"
+  },
+  {
+   "id": "css-function-light-dark",
+   "title": "light-dark()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.23,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Samsung Email"
+   ],
+   "detect": "light\\-dark\\(",
+   "url": "https://www.caniemail.com/features/css-function-light-dark/",
+   "tested": "2024-08-14"
+  },
+  {
+   "id": "css-function-max",
+   "title": "max()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Samsung Email"
+   ],
+   "detect": "max\\(",
+   "url": "https://www.caniemail.com/features/css-function-max/",
+   "tested": "2021-05-07"
+  },
+  {
+   "id": "css-function-min",
+   "title": "min()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Samsung Email"
+   ],
+   "detect": "min\\(",
+   "url": "https://www.caniemail.com/features/css-function-min/",
+   "tested": "2021-05-07"
+  },
+  {
+   "id": "css-gap",
+   "title": "gap, column-gap, row-gap",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": "(?<![a-z-])(row-|column-)?gap\\s*:",
+   "url": "https://www.caniemail.com/features/css-gap/",
+   "tested": "2022-12-28"
+  },
+  {
+   "id": "css-grid-template",
+   "title": "grid-template-* properties",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-grid-template/",
+   "tested": "2023-01-09"
+  },
+  {
+   "id": "css-height",
+   "title": "height property",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [
+    "Yahoo web"
+   ],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-height/",
+   "tested": "2019-09-27"
+  },
+  {
+   "id": "css-hyphenate-character",
+   "title": "hyphenate-character",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])hyphenate\\-character\\s*:",
+   "url": "https://www.caniemail.com/features/css-hyphenate-character/",
+   "tested": "2024-06-19"
+  },
+  {
+   "id": "css-hyphenate-limit-chars",
+   "title": "hyphenate-limit-chars",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.0,
+   "unsupported": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])hyphenate\\-limit\\-chars\\s*:",
+   "url": "https://www.caniemail.com/features/css-hyphenate-limit-chars/",
+   "tested": "2024-08-08"
+  },
+  {
+   "id": "css-hyphens",
+   "title": "hyphens",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])hyphens\\s*:",
+   "url": "https://www.caniemail.com/features/css-hyphens/",
+   "tested": "2022-08-03"
+  },
+  {
+   "id": "css-important",
+   "title": "!important keyword",
+   "category": "css",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-important/",
+   "tested": "2021-11-30"
+  },
+  {
+   "id": "css-inert-attribute",
+   "title": "inert",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])inert\\s*:",
+   "url": "https://www.caniemail.com/features/css-inert-attribute/",
+   "tested": "2026-04-16"
+  },
+  {
+   "id": "css-inline-size",
+   "title": "inline-size ",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.08,
+   "unsupported": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])inline\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-inline-size/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-inset",
+   "title": "inset",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])inset\\s*:",
+   "url": "https://www.caniemail.com/features/css-inset/",
+   "tested": "2024-05-29"
+  },
+  {
+   "id": "css-intrinsic-size",
+   "title": "fit-content, min-content, max-content",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Outlook Windows",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail iPhone",
+    "Outlook Android",
+    "Outlook iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-intrinsic-size/",
+   "tested": "2022-12-31"
+  },
+  {
+   "id": "css-justify-content",
+   "title": "justify-content",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])justify\\-content\\s*:",
+   "url": "https://www.caniemail.com/features/css-justify-content/",
+   "tested": "2021-03-09"
+  },
+  {
+   "id": "css-left-right-top-bottom",
+   "title": "left, right, top, bottom",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.54,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-left-right-top-bottom/",
+   "tested": "2021-05-16"
+  },
+  {
+   "id": "css-letter-spacing",
+   "title": "letter-spacing",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])letter\\-spacing\\s*:",
+   "url": "https://www.caniemail.com/features/css-letter-spacing/",
+   "tested": "2020-01-19"
+  },
+  {
+   "id": "css-line-height",
+   "title": "line-height",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])line\\-height\\s*:",
+   "url": "https://www.caniemail.com/features/css-line-height/",
+   "tested": "2021-10-02"
+  },
+  {
+   "id": "css-linear-gradient",
+   "title": "linear-gradient()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Samsung Email"
+   ],
+   "detect": "linear\\-gradient\\(",
+   "url": "https://www.caniemail.com/features/css-linear-gradient/",
+   "tested": "2021-12-29"
+  },
+  {
+   "id": "css-list-style-image",
+   "title": "list-style-image",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])list\\-style\\-image\\s*:",
+   "url": "https://www.caniemail.com/features/css-list-style-image/",
+   "tested": "2020-04-20"
+  },
+  {
+   "id": "css-list-style-position",
+   "title": "list-style-position",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])list\\-style\\-position\\s*:",
+   "url": "https://www.caniemail.com/features/css-list-style-position/",
+   "tested": "2020-04-20"
+  },
+  {
+   "id": "css-list-style-type",
+   "title": "list-style-type",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "(?<![a-z-])list\\-style\\-type\\s*:",
+   "url": "https://www.caniemail.com/features/css-list-style-type/",
+   "tested": "2020-04-20"
+  },
+  {
+   "id": "css-list-style",
+   "title": "list-style",
+   "category": "css",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])list\\-style\\s*:",
+   "url": "https://www.caniemail.com/features/css-list-style/",
+   "tested": "2020-04-20"
+  },
+  {
+   "id": "css-margin-block-start-end",
+   "title": "margin-block-start & margin-block-end",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-margin-block-start-end/",
+   "tested": "2022-07-13"
+  },
+  {
+   "id": "css-margin-inline-block",
+   "title": "margin-inline & margin-block",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-margin-inline-block/",
+   "tested": "2022-07-12"
+  },
+  {
+   "id": "css-margin-inline-start-end",
+   "title": "margin-inline-start & margin-inline-end",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-margin-inline-start-end/",
+   "tested": "2022-07-13"
+  },
+  {
+   "id": "css-margin",
+   "title": "margin",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])margin\\s*:",
+   "url": "https://www.caniemail.com/features/css-margin/",
+   "tested": "2019-10-01"
+  },
+  {
+   "id": "css-mask-image",
+   "title": "mask-image",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])mask\\-image\\s*:",
+   "url": "https://www.caniemail.com/features/css-mask-image/",
+   "tested": "2024-11-27"
+  },
+  {
+   "id": "css-max-block-size",
+   "title": "max-block-size",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])max\\-block\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-max-block-size/",
+   "tested": "2022-09-01"
+  },
+  {
+   "id": "css-max-height",
+   "title": "max-height property",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-max-height/",
+   "tested": "2021-11-29"
+  },
+  {
+   "id": "css-max-inline-size",
+   "title": "max-inline-size",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])max\\-inline\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-max-inline-size/",
+   "tested": "2024-05-31"
+  },
+  {
+   "id": "css-max-width",
+   "title": "max-width",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])max\\-width\\s*:",
+   "url": "https://www.caniemail.com/features/css-max-width/",
+   "tested": "2019-08-02"
+  },
+  {
+   "id": "css-min-block-size",
+   "title": "min-block-size",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])min\\-block\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-min-block-size/",
+   "tested": "2024-05-31"
+  },
+  {
+   "id": "css-min-height",
+   "title": "min-height property",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-min-height/",
+   "tested": "2021-11-29"
+  },
+  {
+   "id": "css-min-inline-size",
+   "title": "min-inline-size",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])min\\-inline\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-min-inline-size/",
+   "tested": "2022-08-30"
+  },
+  {
+   "id": "css-min-width",
+   "title": "min-width property",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-min-width/",
+   "tested": "2021-11-29"
+  },
+  {
+   "id": "css-mix-blend-mode",
+   "title": "mix-blend-mode",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])mix\\-blend\\-mode\\s*:",
+   "url": "https://www.caniemail.com/features/css-mix-blend-mode/",
+   "tested": "2020-12-12"
+  },
+  {
+   "id": "css-modern-color",
+   "title": "lch(), oklch(), lab(), oklab()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-modern-color/",
+   "tested": "2023-01-18"
+  },
+  {
+   "id": "css-nesting",
+   "title": "CSS Nesting",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-nesting/",
+   "tested": "2023-08-31"
+  },
+  {
+   "id": "css-object-fit",
+   "title": "object-fit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])object\\-fit\\s*:",
+   "url": "https://www.caniemail.com/features/css-object-fit/",
+   "tested": "2021-07-15"
+  },
+  {
+   "id": "css-object-position",
+   "title": "object-position",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])object\\-position\\s*:",
+   "url": "https://www.caniemail.com/features/css-object-position/",
+   "tested": "2021-07-15"
+  },
+  {
+   "id": "css-opacity",
+   "title": "opacity",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])opacity\\s*:",
+   "url": "https://www.caniemail.com/features/css-opacity/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-orphans",
+   "title": "orphans",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])orphans\\s*:",
+   "url": "https://www.caniemail.com/features/css-orphans/",
+   "tested": "2024-06-13"
+  },
+  {
+   "id": "css-outline-offset",
+   "title": "outline-offset",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])outline\\-offset\\s*:",
+   "url": "https://www.caniemail.com/features/css-outline-offset/",
+   "tested": "2022-12-26"
+  },
+  {
+   "id": "css-outline",
+   "title": "outline",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])outline\\s*:",
+   "url": "https://www.caniemail.com/features/css-outline/",
+   "tested": "2022-03-17"
+  },
+  {
+   "id": "css-overflow-wrap",
+   "title": "overflow-wrap",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone"
+   ],
+   "detect": "(?<![a-z-])overflow\\-wrap\\s*:",
+   "url": "https://www.caniemail.com/features/css-overflow-wrap/",
+   "tested": "2022-08-03"
+  },
+  {
+   "id": "css-overflow",
+   "title": "overflow",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])overflow\\s*:",
+   "url": "https://www.caniemail.com/features/css-overflow/",
+   "tested": "2025-05-27"
+  },
+  {
+   "id": "css-padding-block-start-end",
+   "title": "padding-block-start & padding-block-end",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-padding-block-start-end/",
+   "tested": "2022-07-13"
+  },
+  {
+   "id": "css-padding-inline-block",
+   "title": "padding-inline & padding-block",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-padding-inline-block/",
+   "tested": "2022-07-13"
+  },
+  {
+   "id": "css-padding-inline-start-end",
+   "title": "padding-inline-start & padding-inline-end",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-padding-inline-start-end/",
+   "tested": "2022-07-13"
+  },
+  {
+   "id": "css-padding",
+   "title": "padding",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])padding\\s*:",
+   "url": "https://www.caniemail.com/features/css-padding/",
+   "tested": "2019-07-25"
+  },
+  {
+   "id": "css-position",
+   "title": "position",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook iPhone"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Outlook Android",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])position\\s*:",
+   "url": "https://www.caniemail.com/features/css-position/",
+   "tested": "2021-05-16"
+  },
+  {
+   "id": "css-pseudo-class-active",
+   "title": ":active",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Samsung Email"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-active/",
+   "tested": "2019-10-28"
+  },
+  {
+   "id": "css-pseudo-class-checked",
+   "title": ":checked",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.54,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-checked/",
+   "tested": "2020-03-10"
+  },
+  {
+   "id": "css-pseudo-class-default",
+   "title": ":default",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.59,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-default/",
+   "tested": "2026-02-05"
+  },
+  {
+   "id": "css-pseudo-class-first-child",
+   "title": ":first-child",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-first-child/",
+   "tested": "2019-10-16"
+  },
+  {
+   "id": "css-pseudo-class-first-of-type",
+   "title": ":first-of-type",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-first-of-type/",
+   "tested": "2019-10-16"
+  },
+  {
+   "id": "css-pseudo-class-focus-visible",
+   "title": ":focus-visible",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.45,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-focus-visible/",
+   "tested": "2026-04-14"
+  },
+  {
+   "id": "css-pseudo-class-focus-within",
+   "title": ":focus-within",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.4,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook.com"
+   ],
+   "partial": [
+    "Outlook Android",
+    "Outlook Mac"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-focus-within/",
+   "tested": "2026-04-14"
+  },
+  {
+   "id": "css-pseudo-class-focus",
+   "title": ":focus",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook iPhone"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-focus/",
+   "tested": "2019-10-28"
+  },
+  {
+   "id": "css-pseudo-class-has",
+   "title": ":has()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-has/",
+   "tested": "2022-03-15"
+  },
+  {
+   "id": "css-pseudo-class-hover",
+   "title": ":hover",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Gmail iPhone",
+    "Outlook Windows",
+    "Outlook iPhone"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Outlook.com"
+   ],
+   "detect": ":hover\\b",
+   "url": "https://www.caniemail.com/features/css-pseudo-class-hover/",
+   "tested": "2019-10-23"
+  },
+  {
+   "id": "css-pseudo-class-lang",
+   "title": "lang()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "lang\\(",
+   "url": "https://www.caniemail.com/features/css-pseudo-class-lang/",
+   "tested": "2022-07-12"
+  },
+  {
+   "id": "css-pseudo-class-last-child",
+   "title": ":last-child",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-last-child/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-last-of-type",
+   "title": ":last-of-type",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-last-of-type/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-link",
+   "title": ":link",
+   "category": "css",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-link/",
+   "tested": "2019-10-23"
+  },
+  {
+   "id": "css-pseudo-class-not",
+   "title": ":not",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-not/",
+   "tested": "2019-10-23"
+  },
+  {
+   "id": "css-pseudo-class-nth-child",
+   "title": ":nth-child",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-nth-child/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-nth-last-child",
+   "title": ":nth-last-child",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-nth-last-child/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-nth-last-of-type",
+   "title": ":nth-last-of-type",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-nth-last-of-type/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-nth-of-type",
+   "title": ":nth-of-type",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-nth-of-type/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-only-child",
+   "title": ":only-child",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-only-child/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-only-of-type",
+   "title": ":only-of-type",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-only-of-type/",
+   "tested": "2019-10-19"
+  },
+  {
+   "id": "css-pseudo-class-target",
+   "title": ":target",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-target/",
+   "tested": "2019-10-28"
+  },
+  {
+   "id": "css-pseudo-class-visited",
+   "title": ":visited",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.38,
+   "unsupported": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Samsung Email"
+   ],
+   "partial": [
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-class-visited/",
+   "tested": "2019-10-28"
+  },
+  {
+   "id": "css-pseudo-element-after",
+   "title": "::after",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.38,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-element-after/",
+   "tested": "2020-05-21"
+  },
+  {
+   "id": "css-pseudo-element-before",
+   "title": "::before",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.38,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-element-before/",
+   "tested": "2020-05-21"
+  },
+  {
+   "id": "css-pseudo-element-first-letter",
+   "title": "::first-letter",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-element-first-letter/",
+   "tested": "2020-05-21"
+  },
+  {
+   "id": "css-pseudo-element-first-line",
+   "title": "::first-line",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-element-first-line/",
+   "tested": "2020-05-21"
+  },
+  {
+   "id": "css-pseudo-element-marker",
+   "title": "::marker",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-element-marker/",
+   "tested": "2022-12-28"
+  },
+  {
+   "id": "css-pseudo-element-placeholder",
+   "title": "::placeholder",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-pseudo-element-placeholder/",
+   "tested": "2020-05-21"
+  },
+  {
+   "id": "css-radial-gradient",
+   "title": "radial-gradient()",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.46,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "radial\\-gradient\\(",
+   "url": "https://www.caniemail.com/features/css-radial-gradient/",
+   "tested": "2021-12-29"
+  },
+  {
+   "id": "css-resize",
+   "title": "resize",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.12,
+   "unsupported": [
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac"
+   ],
+   "detect": "(?<![a-z-])resize\\s*:",
+   "url": "https://www.caniemail.com/features/css-resize/",
+   "tested": "2024-01-17"
+  },
+  {
+   "id": "css-rgb",
+   "title": "rgb()",
+   "category": "css",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "detect": "rgb\\(",
+   "url": "https://www.caniemail.com/features/css-rgb/",
+   "tested": "2021-05-14"
+  },
+  {
+   "id": "css-rgba",
+   "title": "rgba()",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Yahoo web"
+   ],
+   "detect": "rgba\\(",
+   "url": "https://www.caniemail.com/features/css-rgba/",
+   "tested": "2021-05-14"
+  },
+  {
+   "id": "css-scroll-snap",
+   "title": "scroll-snap",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])scroll\\-snap\\s*:",
+   "url": "https://www.caniemail.com/features/css-scroll-snap/",
+   "tested": "2023-02-27"
+  },
+  {
+   "id": "css-selector-adjacent-sibling",
+   "title": "Adjacent sibling combinator",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-adjacent-sibling/",
+   "tested": "2020-03-11"
+  },
+  {
+   "id": "css-selector-attribute",
+   "title": "Attribute selector",
+   "category": "css",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-attribute/",
+   "tested": "2020-12-15"
+  },
+  {
+   "id": "css-selector-chaining",
+   "title": "Chaining selectors",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Outlook.com"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-chaining/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-child",
+   "title": "Child combinator",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-child/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-class",
+   "title": "Class selector",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-class/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-descendant",
+   "title": "Descendant combinator",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-descendant/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-general-sibling",
+   "title": "General sibling combinator",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-general-sibling/",
+   "tested": "2020-03-11"
+  },
+  {
+   "id": "css-selector-grouping",
+   "title": "Grouping selectors",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-grouping/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-id",
+   "title": "ID selector",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-id/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-type",
+   "title": "Type selector",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-type/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-selector-universal",
+   "title": "Universal selector *",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-selector-universal/",
+   "tested": "2019-10-13"
+  },
+  {
+   "id": "css-shape-margin",
+   "title": "shape-margin",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])shape\\-margin\\s*:",
+   "url": "https://www.caniemail.com/features/css-shape-margin/",
+   "tested": "2024-03-13"
+  },
+  {
+   "id": "css-shape-outside",
+   "title": "shape-outside",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])shape\\-outside\\s*:",
+   "url": "https://www.caniemail.com/features/css-shape-outside/",
+   "tested": "2024-02-28"
+  },
+  {
+   "id": "css-sytem-ui",
+   "title": "system-ui, ui-serif, ui-sans-serif, ui-rounded, ui-monospace",
+   "category": "css",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Outlook Android",
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-sytem-ui/",
+   "tested": "2022-12-30"
+  },
+  {
+   "id": "css-tab-size",
+   "title": "tab-size",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])tab\\-size\\s*:",
+   "url": "https://www.caniemail.com/features/css-tab-size/",
+   "tested": "2022-07-21"
+  },
+  {
+   "id": "css-table-layout",
+   "title": "table-layout",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])table\\-layout\\s*:",
+   "url": "https://www.caniemail.com/features/css-table-layout/",
+   "tested": "2022-07-20"
+  },
+  {
+   "id": "css-text-align-last",
+   "title": "text-align-last",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-align\\-last\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-align-last/",
+   "tested": "2022-08-31"
+  },
+  {
+   "id": "css-text-align",
+   "title": "text-align",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Outlook Windows",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])text\\-align\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-align/",
+   "tested": "2025-11-14"
+  },
+  {
+   "id": "css-text-decoration-color",
+   "title": "text-decoration-color",
+   "category": "css",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Outlook Mac"
+   ],
+   "detect": "(?<![a-z-])text\\-decoration\\-color\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-decoration-color/",
+   "tested": "2020-04-30"
+  },
+  {
+   "id": "css-text-decoration-line",
+   "title": "text-decoration-line",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-decoration\\-line\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-decoration-line/",
+   "tested": "2023-12-06"
+  },
+  {
+   "id": "css-text-decoration-skip-ink",
+   "title": "text-decoration-skip-ink",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-decoration\\-skip\\-ink\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-decoration-skip-ink/",
+   "tested": "2023-12-08"
+  },
+  {
+   "id": "css-text-decoration-style",
+   "title": "text-decoration-style",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-decoration\\-style\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-decoration-style/",
+   "tested": "2023-12-06"
+  },
+  {
+   "id": "css-text-decoration-thickness",
+   "title": "text-decoration-thickness",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-decoration\\-thickness\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-decoration-thickness/",
+   "tested": "2023-01-16"
+  },
+  {
+   "id": "css-text-decoration",
+   "title": "text-decoration",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])text\\-decoration\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-decoration/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-text-emphasis-position",
+   "title": "text-emphasis-position",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-emphasis\\-position\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-emphasis-position/",
+   "tested": "2022-07-07"
+  },
+  {
+   "id": "css-text-emphasis",
+   "title": "text-emphasis",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Outlook Android",
+    "Outlook Windows",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-emphasis\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-emphasis/",
+   "tested": "2022-07-07"
+  },
+  {
+   "id": "css-text-indent",
+   "title": "text-indent",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])text\\-indent\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-indent/",
+   "tested": "2021-01-31"
+  },
+  {
+   "id": "css-text-justify",
+   "title": "text-justify",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Samsung Email"
+   ],
+   "partial": [
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])text\\-justify\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-justify/",
+   "tested": "2024-04-17"
+  },
+  {
+   "id": "css-text-orientation",
+   "title": "text-orientation",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-orientation\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-orientation/",
+   "tested": "2023-12-08"
+  },
+  {
+   "id": "css-text-overflow",
+   "title": "text-overflow",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Outlook Windows",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])text\\-overflow\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-overflow/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-text-shadow",
+   "title": "text-shadow",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-shadow\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-shadow/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-text-transform",
+   "title": "text-transform",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "(?<![a-z-])text\\-transform\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-transform/",
+   "tested": "2021-09-19"
+  },
+  {
+   "id": "css-text-underline-offset",
+   "title": "text-underline-offset",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-underline\\-offset\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-underline-offset/",
+   "tested": "2023-01-16"
+  },
+  {
+   "id": "css-text-underline-position",
+   "title": "text-underline-position",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail iPhone",
+    "Outlook iPhone"
+   ],
+   "detect": "(?<![a-z-])text\\-underline\\-position\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-underline-position/",
+   "tested": "2023-12-08"
+  },
+  {
+   "id": "css-text-wrap",
+   "title": "text-wrap",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])text\\-wrap\\s*:",
+   "url": "https://www.caniemail.com/features/css-text-wrap/",
+   "tested": "2024-04-03"
+  },
+  {
+   "id": "css-transform",
+   "title": "transform",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])transform\\s*:",
+   "url": "https://www.caniemail.com/features/css-transform/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-transition",
+   "title": "transition",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])transition\\s*:",
+   "url": "https://www.caniemail.com/features/css-transition/",
+   "tested": "2024-03-29"
+  },
+  {
+   "id": "css-unit-calc",
+   "title": "CSS calc() function",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-calc/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-ch",
+   "title": "ch unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-ch/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-cm",
+   "title": "cm unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-cm/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-em",
+   "title": "em unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-em/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-ex",
+   "title": "ex unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-ex/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-in",
+   "title": "in unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-in/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-initial",
+   "title": "initial unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-initial/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-mm",
+   "title": "mm unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-mm/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-pc",
+   "title": "pc unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-pc/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-percent",
+   "title": "% unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-percent/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-pt",
+   "title": "pt unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-pt/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-px",
+   "title": "px unit",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-px/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-rem",
+   "title": "rem unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-rem/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-vh",
+   "title": "vh unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Apple Mail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-vh/",
+   "tested": "2023-10-01"
+  },
+  {
+   "id": "css-unit-vmax",
+   "title": "vmax unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-vmax/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-vmin",
+   "title": "vmin unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-vmin/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-unit-vw",
+   "title": "vw unit",
+   "category": "css",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-unit-vw/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-user-select",
+   "title": "user-select",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.21,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail iPhone"
+   ],
+   "detect": "(?<![a-z-])user\\-select\\s*:",
+   "url": "https://www.caniemail.com/features/css-user-select/",
+   "tested": "2024-02-14"
+  },
+  {
+   "id": "css-variables",
+   "title": "CSS Variables (Custom Properties)",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "var\\(--|(?<![a-z-])--[a-z][\\w-]*\\s*:",
+   "url": "https://www.caniemail.com/features/css-variables/",
+   "tested": "2020-02-25"
+  },
+  {
+   "id": "css-vertical-align",
+   "title": "vertical-align",
+   "category": "css",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "(?<![a-z-])vertical\\-align\\s*:",
+   "url": "https://www.caniemail.com/features/css-vertical-align/",
+   "tested": "2020-12-21"
+  },
+  {
+   "id": "css-visibility",
+   "title": "visibility",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])visibility\\s*:",
+   "url": "https://www.caniemail.com/features/css-visibility/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-white-space-collapse",
+   "title": "white-space-collapse",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])white\\-space\\-collapse\\s*:",
+   "url": "https://www.caniemail.com/features/css-white-space-collapse/",
+   "tested": "2024-09-04"
+  },
+  {
+   "id": "css-white-space",
+   "title": "white-space",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Samsung Email"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])white\\-space\\s*:",
+   "url": "https://www.caniemail.com/features/css-white-space/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "css-widows",
+   "title": "widows",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])widows\\s*:",
+   "url": "https://www.caniemail.com/features/css-widows/",
+   "tested": "2024-05-03"
+  },
+  {
+   "id": "css-width",
+   "title": "width property",
+   "category": "css",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/css-width/",
+   "tested": "2019-09-27"
+  },
+  {
+   "id": "css-word-break",
+   "title": "word-break",
+   "category": "css",
+   "level": "avoid",
+   "support": 0.54,
+   "unsupported": [
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email"
+   ],
+   "detect": "(?<![a-z-])word\\-break\\s*:",
+   "url": "https://www.caniemail.com/features/css-word-break/",
+   "tested": "2022-02-15"
+  },
+  {
+   "id": "css-word-spacing",
+   "title": "word-spacing",
+   "category": "css",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Yahoo web"
+   ],
+   "detect": "(?<![a-z-])word\\-spacing\\s*:",
+   "url": "https://www.caniemail.com/features/css-word-spacing/",
+   "tested": "2024-03-13"
+  },
+  {
+   "id": "css-word-wrap",
+   "title": "word-wrap",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail web"
+   ],
+   "detect": "(?<![a-z-])word\\-wrap\\s*:",
+   "url": "https://www.caniemail.com/features/css-word-wrap/",
+   "tested": "2025-05-08"
+  },
+  {
+   "id": "css-writing-mode",
+   "title": "writing-mode",
+   "category": "css",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "(?<![a-z-])writing\\-mode\\s*:",
+   "url": "https://www.caniemail.com/features/css-writing-mode/",
+   "tested": "2022-05-04"
+  },
+  {
+   "id": "css-z-index",
+   "title": "z-index",
+   "category": "css",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": "(?<![a-z-])z\\-index\\s*:",
+   "url": "https://www.caniemail.com/features/css-z-index/",
+   "tested": "2021-05-16"
+  },
+  {
+   "id": "html-abbr",
+   "title": "<abbr> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "<abbr\\b",
+   "url": "https://www.caniemail.com/features/html-abbr/",
+   "tested": "2023-09-13"
+  },
+  {
+   "id": "html-acronym",
+   "title": "<acronym> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "<acronym\\b",
+   "url": "https://www.caniemail.com/features/html-acronym/",
+   "tested": "2024-01-03"
+  },
+  {
+   "id": "html-address",
+   "title": "address",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-address/",
+   "tested": "2021-01-17"
+  },
+  {
+   "id": "html-align",
+   "title": "align attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Mac"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-align/",
+   "tested": "2021-11-10"
+  },
+  {
+   "id": "html-anchor-links",
+   "title": "Local anchors",
+   "category": "html",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Gmail iPhone",
+    "Samsung Email"
+   ],
+   "partial": [
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-anchor-links/",
+   "tested": "2019-08-08"
+  },
+  {
+   "id": "html-aria-describedby",
+   "title": "aria-describedby attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-aria-describedby/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-aria-hidden",
+   "title": "aria-hidden attribute",
+   "category": "html",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-aria-hidden/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-aria-label",
+   "title": "aria-label attribute",
+   "category": "html",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-aria-label/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-aria-labelledby",
+   "title": "aria-labelledby attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-aria-labelledby/",
+   "tested": "2022-04-08"
+  },
+  {
+   "id": "html-aria-live",
+   "title": "aria-live attribute",
+   "category": "html",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-aria-live/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-audio",
+   "title": "<audio> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "<audio\\b",
+   "url": "https://www.caniemail.com/features/html-audio/",
+   "tested": "2020-04-21"
+  },
+  {
+   "id": "html-background",
+   "title": "background attribute",
+   "category": "html",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-background/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-base",
+   "title": "<base>",
+   "category": "html",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Outlook Android"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Mac",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": "<base\\b",
+   "url": "https://www.caniemail.com/features/html-base/",
+   "tested": "2021-12-01"
+  },
+  {
+   "id": "html-bdi",
+   "title": "<bdi> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "<bdi\\b",
+   "url": "https://www.caniemail.com/features/html-bdi/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-blockquote",
+   "title": "<blockquote> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<blockquote\\b",
+   "url": "https://www.caniemail.com/features/html-blockquote/",
+   "tested": "2020-05-08"
+  },
+  {
+   "id": "html-body",
+   "title": "<body> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Outlook Mac"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": "<body\\b",
+   "url": "https://www.caniemail.com/features/html-body/",
+   "tested": "2021-11-30"
+  },
+  {
+   "id": "html-button-reset",
+   "title": "<button type=\"reset\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-button-reset/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-button-submit",
+   "title": "<button type=\"submit\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "partial": [
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-button-submit/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-cellpadding",
+   "title": "cellpadding attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-cellpadding/",
+   "tested": "2024-05-01"
+  },
+  {
+   "id": "html-cellspacing",
+   "title": "cellspacing attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-cellspacing/",
+   "tested": "2024-05-01"
+  },
+  {
+   "id": "html-code",
+   "title": "<code> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<code\\b",
+   "url": "https://www.caniemail.com/features/html-code/",
+   "tested": "2023-04-25"
+  },
+  {
+   "id": "html-command-attribute",
+   "title": "command and commandfor attributes",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.23,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-command-attribute/",
+   "tested": "2026-07-13"
+  },
+  {
+   "id": "html-comments",
+   "title": "HTML comments",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-comments/",
+   "tested": "2024-05-1"
+  },
+  {
+   "id": "html-del",
+   "title": "<del> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<del\\b",
+   "url": "https://www.caniemail.com/features/html-del/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-dfn",
+   "title": "<dfn> element",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": "<dfn\\b",
+   "url": "https://www.caniemail.com/features/html-dfn/",
+   "tested": "2023-09-11"
+  },
+  {
+   "id": "html-dialog",
+   "title": "<dialog> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "<dialog\\b",
+   "url": "https://www.caniemail.com/features/html-dialog/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-dir",
+   "title": "dir attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-dir/",
+   "tested": "2021-11-01"
+  },
+  {
+   "id": "html-div",
+   "title": "<div> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<div\\b",
+   "url": "https://www.caniemail.com/features/html-div/",
+   "tested": "2020-05-08"
+  },
+  {
+   "id": "html-doctype",
+   "title": "HTML5 doctype",
+   "category": "html",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows",
+    "Samsung Email"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-doctype/",
+   "tested": "2019-07-25"
+  },
+  {
+   "id": "html-form",
+   "title": "<form> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail iPhone",
+    "Outlook.com"
+   ],
+   "detect": "<form\\b",
+   "url": "https://www.caniemail.com/features/html-form/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-h1-h6",
+   "title": "<h1> to <h6> elements",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-h1-h6/",
+   "tested": "2020-05-08"
+  },
+  {
+   "id": "html-height",
+   "title": "height attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-height/",
+   "tested": "2019-09-27"
+  },
+  {
+   "id": "html-hidden",
+   "title": "hidden attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-hidden/",
+   "tested": "2024-01-26"
+  },
+  {
+   "id": "html-hr",
+   "title": "<hr> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<hr\\b",
+   "url": "https://www.caniemail.com/features/html-hr/",
+   "tested": "2023-09-08"
+  },
+  {
+   "id": "html-image-maps",
+   "title": "Image maps",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-image-maps/",
+   "tested": "2021-09-29"
+  },
+  {
+   "id": "html-img",
+   "title": "<img> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<img\\b",
+   "url": "https://www.caniemail.com/features/html-img/",
+   "tested": "2023-12-16"
+  },
+  {
+   "id": "html-input-checkbox",
+   "title": "<input type=\"checkbox\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-input-checkbox/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-input-hidden",
+   "title": "<input type=\"hidden\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-input-hidden/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-input-radio",
+   "title": "<input type=\"radio\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-input-radio/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-input-reset",
+   "title": "<input type=\"reset\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.88,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-input-reset/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-input-submit",
+   "title": "<input type=\"submit\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook.com"
+   ],
+   "partial": [
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-input-submit/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-input-text",
+   "title": "<input type=\"text\"> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows",
+    "Samsung Email"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-input-text/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-lang",
+   "title": "lang attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-lang/",
+   "tested": "2020-10-25"
+  },
+  {
+   "id": "html-link",
+   "title": "<link> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": "<link\\b",
+   "url": "https://www.caniemail.com/features/html-link/",
+   "tested": "2023-12-21"
+  },
+  {
+   "id": "html-lists",
+   "title": "<ul>, <ol> and <dl>",
+   "category": "html",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-lists/",
+   "tested": "2024-02-17"
+  },
+  {
+   "id": "html-loading-attribute",
+   "title": "loading attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-loading-attribute/",
+   "tested": "2021-10-27"
+  },
+  {
+   "id": "html-mailto-links",
+   "title": "mailto: links",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-mailto-links/",
+   "tested": "2021-05-20"
+  },
+  {
+   "id": "html-marquee",
+   "title": "<marquee> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "detect": "<marquee\\b",
+   "url": "https://www.caniemail.com/features/html-marquee/",
+   "tested": "2020-04-21"
+  },
+  {
+   "id": "html-meta-color-scheme",
+   "title": "color-scheme meta tag",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.17,
+   "unsupported": [
+    "Apple Mail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-meta-color-scheme/",
+   "tested": "2026-09-16"
+  },
+  {
+   "id": "html-meter",
+   "title": "<meter> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.62,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "<meter\\b",
+   "url": "https://www.caniemail.com/features/html-meter/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-object",
+   "title": "<object> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.21,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Outlook Mac",
+    "Samsung Email"
+   ],
+   "detect": "<object\\b",
+   "url": "https://www.caniemail.com/features/html-object/",
+   "tested": "2021-02-20"
+  },
+  {
+   "id": "html-p",
+   "title": "<p> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<p\\b",
+   "url": "https://www.caniemail.com/features/html-p/",
+   "tested": "2020-05-08"
+  },
+  {
+   "id": "html-picture",
+   "title": "<picture> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.29,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac"
+   ],
+   "detect": "<picture\\b",
+   "url": "https://www.caniemail.com/features/html-picture/",
+   "tested": "2024-04-15"
+  },
+  {
+   "id": "html-popover",
+   "title": "popover attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.21,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-popover/",
+   "tested": "2026-07-13"
+  },
+  {
+   "id": "html-pre",
+   "title": "<pre> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<pre\\b",
+   "url": "https://www.caniemail.com/features/html-pre/",
+   "tested": "2023-04-25"
+  },
+  {
+   "id": "html-progress",
+   "title": "<progress> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.38,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "<progress\\b",
+   "url": "https://www.caniemail.com/features/html-progress/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-required",
+   "title": "required attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.54,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-required/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-role",
+   "title": "role attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-role/",
+   "tested": "2020-02-04"
+  },
+  {
+   "id": "html-rp",
+   "title": "<rp> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "<rp\\b",
+   "url": "https://www.caniemail.com/features/html-rp/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-rt",
+   "title": "<rt> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "<rt\\b",
+   "url": "https://www.caniemail.com/features/html-rt/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-ruby",
+   "title": "<ruby> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "<ruby\\b",
+   "url": "https://www.caniemail.com/features/html-ruby/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-select",
+   "title": "<select> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Apple Mail iPhone",
+    "Gmail iPhone"
+   ],
+   "detect": "<select\\b",
+   "url": "https://www.caniemail.com/features/html-select/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-semantics",
+   "title": "HTML5 semantics",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.58,
+   "unsupported": [
+    "Outlook Windows",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook iPhone",
+    "Outlook.com"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-semantics/",
+   "tested": "2019-07-29"
+  },
+  {
+   "id": "html-small",
+   "title": "<small> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<small\\b",
+   "url": "https://www.caniemail.com/features/html-small/",
+   "tested": "2021-11-13"
+  },
+  {
+   "id": "html-span",
+   "title": "<span> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<span\\b",
+   "url": "https://www.caniemail.com/features/html-span/",
+   "tested": "2020-05-08"
+  },
+  {
+   "id": "html-srcset",
+   "title": "srcset and sizes attributes",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.33,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-srcset/",
+   "tested": "2019-05-29"
+  },
+  {
+   "id": "html-strike",
+   "title": "<strike> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone"
+   ],
+   "detect": "<strike\\b",
+   "url": "https://www.caniemail.com/features/html-strike/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-strong",
+   "title": "<strong> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<strong\\b",
+   "url": "https://www.caniemail.com/features/html-strong/",
+   "tested": "2020-05-08"
+  },
+  {
+   "id": "html-style",
+   "title": "<style> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.83,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Windows"
+   ],
+   "detect": "<style\\b",
+   "url": "https://www.caniemail.com/features/html-style/",
+   "tested": "2023-07-27"
+  },
+  {
+   "id": "html-svg",
+   "title": "Embedded <svg> image",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.29,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac"
+   ],
+   "detect": "<svg\\b",
+   "url": "https://www.caniemail.com/features/html-svg/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "html-table",
+   "title": "<table> element",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": "<table\\b",
+   "url": "https://www.caniemail.com/features/html-table/",
+   "tested": "2019-09-15"
+  },
+  {
+   "id": "html-target",
+   "title": "target attribute",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.29,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Samsung Email"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-target/",
+   "tested": "2021-12-28"
+  },
+  {
+   "id": "html-textarea",
+   "title": "<textarea> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.75,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows",
+    "Samsung Email"
+   ],
+   "partial": [],
+   "detect": "<textarea\\b",
+   "url": "https://www.caniemail.com/features/html-textarea/",
+   "tested": "2019-09-10"
+  },
+  {
+   "id": "html-valign",
+   "title": "valign attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-valign/",
+   "tested": "2020-12-21"
+  },
+  {
+   "id": "html-video",
+   "title": "<video> element",
+   "category": "html",
+   "level": "avoid",
+   "support": 0.25,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Apple Mail iPhone",
+    "Samsung Email"
+   ],
+   "detect": "<video\\b",
+   "url": "https://www.caniemail.com/features/html-video/",
+   "tested": "2019-09-16"
+  },
+  {
+   "id": "html-wbr",
+   "title": "<wbr> element",
+   "category": "html",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Gmail iPhone",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android"
+   ],
+   "detect": "<wbr\\b",
+   "url": "https://www.caniemail.com/features/html-wbr/",
+   "tested": "2019-02-28"
+  },
+  {
+   "id": "html-width",
+   "title": "width attribute",
+   "category": "html",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/html-width/",
+   "tested": "2019-09-27"
+  },
+  {
+   "id": "image-apng",
+   "title": "Animated PNG image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.67,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-apng/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-avif",
+   "title": "AVIF image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-avif/",
+   "tested": "2023-01-14"
+  },
+  {
+   "id": "image-base64",
+   "title": "Base 64 image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web"
+   ],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-base64/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-bmp",
+   "title": "BMP image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [],
+   "partial": [
+    "Gmail Android",
+    "Gmail web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-bmp/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-gif",
+   "title": "GIF image format",
+   "category": "image",
+   "level": "safe",
+   "support": 0.96,
+   "unsupported": [],
+   "partial": [
+    "Outlook Windows"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-gif/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-hdr",
+   "title": "HDR image format",
+   "category": "image",
+   "level": "avoid",
+   "support": 0.0,
+   "unsupported": [
+    "Apple Mail Mac",
+    "Apple Mail iPhone",
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook iPhone",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-hdr/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-heif",
+   "title": "HEIF image format",
+   "category": "image",
+   "level": "avoid",
+   "support": 0.42,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Mac",
+    "Outlook Windows",
+    "Outlook.com",
+    "Samsung Email"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Yahoo web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-heif/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-ico",
+   "title": "ICO image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.92,
+   "unsupported": [
+    "Outlook Windows"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-ico/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-jpg",
+   "title": "JPG image format",
+   "category": "image",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-jpg/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-mp4",
+   "title": "Video as Image Assets",
+   "category": "image",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web",
+    "Outlook Android",
+    "Outlook Windows",
+    "Samsung Email"
+   ],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-mp4/",
+   "tested": "2021-05-13"
+  },
+  {
+   "id": "image-png",
+   "title": "PNG image format",
+   "category": "image",
+   "level": "safe",
+   "support": 1.0,
+   "unsupported": [],
+   "partial": [],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-png/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-svg",
+   "title": "SVG image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.79,
+   "unsupported": [
+    "Outlook Mac"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web"
+   ],
+   "detect": "src=[\\\"'][^\\\"']+\\.svg\\b",
+   "url": "https://www.caniemail.com/features/image-svg/",
+   "tested": "2026-09-16"
+  },
+  {
+   "id": "image-tiff",
+   "title": "TIFF image format",
+   "category": "image",
+   "level": "avoid",
+   "support": 0.5,
+   "unsupported": [
+    "Outlook Android",
+    "Outlook Windows",
+    "Outlook.com",
+    "Samsung Email",
+    "Yahoo web"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail web"
+   ],
+   "detect": null,
+   "url": "https://www.caniemail.com/features/image-tiff/",
+   "tested": "2020-02-06"
+  },
+  {
+   "id": "image-webp",
+   "title": "webP image format",
+   "category": "image",
+   "level": "partial",
+   "support": 0.71,
+   "unsupported": [
+    "Outlook Mac",
+    "Outlook Windows"
+   ],
+   "partial": [
+    "Gmail Android",
+    "Gmail iPhone",
+    "Gmail web"
+   ],
+   "detect": "\\.webp\\b",
+   "url": "https://www.caniemail.com/features/image-webp/",
+   "tested": "2021-02-06"
+  }
+ ],
+ "sources": {
+  "cerberus": {
+   "name": "Cerberus",
+   "repo": "emailmonday/Cerberus",
+   "commit": "af3cec9dd12fbbea0c6e9a1b0bf82a0479726957",
+   "license": "MIT",
+   "copyright": "Copyright (c) 2017 Ted Goas"
+  },
+  "foundation": {
+   "name": "Foundation for Emails",
+   "repo": "foundation/foundation-emails",
+   "commit": "7a37ae4cad4f97068f8257ba92a67a261080e3c5",
+   "license": "MIT",
+   "copyright": "Copyright (c) 2017 Foundation, inc."
+  },
+  "caniemail": {
+   "name": "Can I email",
+   "repo": "hteumeuleu/caniemail",
+   "commit": "cb8109c3f8658e003aa064b47a71b232ddc28d39",
+   "data_url": "https://www.caniemail.com/api/data.json",
+   "license": "MIT",
+   "copyright": "Copyright (c) 2019 Rémi Parmentier"
+  }
+ },
+ "tokens": {
+  "background": "#FFFFFF",
+  "surface": "#F4F4F4",
+  "text": "#222222",
+  "muted": "#666666",
+  "accent": "#222222",
+  "accent_text": "#FFFFFF",
+  "font": "Helvetica, Arial, sans-serif",
+  "heading_font": "Helvetica, Arial, sans-serif",
+  "h1_size": "32px",
+  "h2_size": "24px",
+  "h3_size": "18px",
+  "body_size": "16px",
+  "small_size": "13px",
+  "heading_weight": "700",
+  "heading_case": "none",
+  "heading_letter_spacing": "0px",
+  "line_height": "1.5",
+  "radius": "4px",
+  "image_radius": "0px",
+  "button_padding": "14px 28px",
+  "button_case": "none",
+  "button_letter_spacing": "0px",
+  "button_weight": "700",
+  "section_padding": "32px",
+  "gutter": "24px"
+ },
+ "built": "2026-10-05T00:22:20",
+ "constraints_updated": "2026-09-16 13:05:00 +0000",
+ "mjml_baseline": [
+  "css-at-media",
+  "css-background",
+  "css-background-color",
+  "css-background-position",
+  "css-background-repeat",
+  "css-background-size",
+  "css-border",
+  "css-border-collapse",
+  "css-border-radius",
+  "css-border-spacing",
+  "css-cursor",
+  "css-direction",
+  "css-display",
+  "css-float",
+  "css-font-size",
+  "css-font-weight",
+  "css-letter-spacing",
+  "css-line-height",
+  "css-list-style",
+  "css-list-style-type",
+  "css-margin",
+  "css-max-width",
+  "css-outline",
+  "css-padding",
+  "css-text-align",
+  "css-text-decoration",
+  "css-text-transform",
+  "css-vertical-align",
+  "css-word-break",
+  "css-word-spacing",
+  "html-body",
+  "html-div",
+  "html-img",
+  "html-p",
+  "html-style",
+  "html-table"
+ ]
+}

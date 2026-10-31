@@ -1,0 +1,16 @@
+{
+  "_comment": "Optional. If your account can't call one of the pipeline's default models, remap that step here, e.g. \"email:planner:email_topper\": \"gpt-5.2\". Keys are pipeline:step:prompt_key. Defaults shown in _defaults.",
+  "_defaults": {
+    "email:planner:email_topper": "gpt-5.6-sol",
+    "email:footer_mjml:template_selector": "gpt-5.6-sol",
+    "email:group_assigner:group_assignment": "gpt-5.1",
+    "email:global_allocator:visual_assignment": "gpt-5",
+    "email:microcopy:microcopy_strategist": "gpt-4.1",
+    "email:global_css:main": "gpt-4.1",
+    "email:header_designer:header_image_generation": "gemini-3-pro-image-preview",
+    "email:header_designer:header_html_generation": "gemini-3.1-pro-preview",
+    "email:mjml_validator:main": "claude-opus-4-5-20251101",
+    "email:mjml_fixer:main": "claude-opus-4-5-20251101",
+    "email:visual_qa:main": "claude-opus-4-8"
+  }
+}
